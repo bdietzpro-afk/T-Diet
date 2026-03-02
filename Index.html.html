@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="T-Diet"/>
+<meta name="theme-color" content="#0a0a0f"/>
+<title>T-Diet | Testosterone Meal Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:        #0a0a0f;
+    --bg2:       #111118;
+    --bg3:       #1a1a24;
+    --card:      #16161f;
+    --border:    #2a2a3a;
+    --gold:      #d4a843;
+    --gold2:     #f0c060;
+    --green:     #3ddc84;
+    --red:       #ff4d6d;
+    --blue:      #4d9fff;
+    --text:      #f0f0f5;
+    --muted:     #888899;
+    --accent:    #d4a843;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  .app-header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px 12px;
+  }
+  .header-top { display: flex; align-items: center; justify-content: space-between; }
+  .app-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; color: var(--gold); }
+  .app-subtitle { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
+  .streak-badge {
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: #000; font-weight: 700; font-size: 12px;
+    padding: 4px 10px; border-radius: 20px;
+  }
+
+  /* ── NAV ── */
+  .nav-tabs {
+    display: flex; gap: 4px;
+    background: var(--bg2);
+    border-radius: 14px; padding: 4px;
+    margin: 0 20px 0;
+  }
+  .nav-tab {
+    flex: 1; border: none; background: transparent;
+    color: var(--muted); font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 500;
+    padding: 8px 4px; border-radius: 10px;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .nav-tab.active { background: var(--card); color: var(--gold); }
+  .nav-tab svg { width: 18px; height: 18px; }
+
+  /* ── SCREENS ── */
+  .screen { display: none; padding: 16px 16px 100px; }
+  .screen.active { display: block; }
+
+  /* ── DAY SELECTOR ── */
+  .day-scroll {
+    display: flex; gap: 8px; overflow-x: auto;
+    padding-bottom: 4px; margin-bottom: 16px;
+    -ms-overflow-style: none; scrollbar-width: none;
+  }
+  .day-scroll::-webkit-scrollbar { display: none; }
+  .day-btn {
+    flex-shrink: 0; border: 1.5px solid var(--border);
+    background: var(--card); color: var(--muted);
+    border-radius: 12px; padding: 8px 14px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all 0.18s;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .day-btn .day-name { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+  .day-btn .day-num { font-family: 'Bebas Neue', sans-serif; font-size: 20px; line-height: 1; }
+  .day-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(212,168,67,0.08); }
+  .day-btn.complete { border-color: var(--green); color: var(--green); background: rgba(61,220,132,0.06); }
+
+  /* ── DAILY MACRO BAR ── */
+  .macro-summary {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 14px 16px; margin-bottom: 16px;
+  }
+  .macro-summary-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: flex; justify-content: space-between; }
+  .macro-bars { display: flex; flex-direction: column; gap: 8px; }
+  .macro-row { display: flex; align-items: center; gap: 10px; }
+  .macro-label { font-size: 11px; color: var(--muted); width: 56px; font-family: 'DM Mono', monospace; }
+  .macro-bar-wrap { flex: 1; height: 6px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
+  .macro-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+  .macro-val { font-size: 11px; font-family: 'DM Mono', monospace; width: 48px; text-align: right; color: var(--text); }
+  .cal-display { text-align: center; margin-bottom: 8px; }
+  .cal-num { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--gold); line-height: 1; }
+  .cal-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ── MEAL CARDS ── */
+  .meal-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; margin-bottom: 10px; overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .meal-card.checked { border-color: rgba(61,220,132,0.4); }
+  .meal-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; cursor: pointer;
+  }
+  .meal-check {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 2px solid var(--border); background: transparent;
+    cursor: pointer; flex-shrink: 0; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-appearance: none; appearance: none;
+  }
+  .meal-card.checked .meal-check { border-color: var(--green); background: var(--green); }
+  .meal-check-inner { width: 10px; height: 10px; }
+  .meal-info { flex: 1; min-width: 0; }
+  .meal-type { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+  .meal-name { font-size: 14px; font-weight: 500; color: var(--text); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .meal-cals { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--muted); flex-shrink: 0; }
+  .meal-expand { padding: 0 16px 14px; display: none; }
+  .meal-card.open .meal-expand { display: block; }
+  .meal-desc { font-size: 13px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+  .meal-serving { font-size: 11px; color: var(--blue); margin-bottom: 10px; font-family: 'DM Mono', monospace; }
+  .macro-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 500;
+    padding: 4px 10px; border-radius: 20px;
+  }
+  .chip-p { background: rgba(77,159,255,0.15); color: var(--blue); }
+  .chip-c { background: rgba(212,168,67,0.15); color: var(--gold2); }
+  .chip-f { background: rgba(255,77,109,0.15); color: var(--red); }
+  .chevron { color: var(--muted); transition: transform 0.2s; flex-shrink: 0; }
+  .meal-card.open .chevron { transform: rotate(180deg); }
+
+  /* ── SWAP BUTTON ── */
+  .swap-btn {
+    display: flex; align-items: center; gap: 5px;
+    margin-top: 10px; padding: 7px 12px;
+    background: rgba(212,168,67,0.08); border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 10px; color: var(--gold); font-size: 11px; font-weight: 600;
+    cursor: pointer; width: fit-content; letter-spacing: 0.5px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .swap-btn svg { width: 13px; height: 13px; }
+
+  /* ── MEAL PICKER SHEET ── */
+  .picker-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px); align-items: flex-end;
+  }
+  .picker-overlay.open { display: flex; }
+  .picker-sheet {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 24px 24px 0 0; width: 100%; max-width: 480px;
+    max-height: 82vh; display: flex; flex-direction: column;
+    animation: slideUp 0.28s cubic-bezier(.4,0,.2,1);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .picker-handle {
+    width: 36px; height: 4px; background: var(--border);
+    border-radius: 2px; margin: 12px auto 0;
+  }
+  .picker-header {
+    padding: 14px 20px 12px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .picker-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; color: var(--gold); }
+  .picker-subtitle { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .picker-close { color: var(--muted); font-size: 22px; cursor: pointer; padding: 4px 8px; line-height: 1; }
+  .picker-scroll { overflow-y: auto; padding: 12px 16px 20px; flex: 1; }
+  .alt-card {
+    background: var(--card); border: 1.5px solid var(--border);
+    border-radius: 14px; padding: 14px; margin-bottom: 10px;
+    cursor: pointer; transition: all 0.18s;
+  }
+  .alt-card:active { transform: scale(0.98); }
+  .alt-card.selected { border-color: var(--gold); background: rgba(212,168,67,0.06); }
+  .alt-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .alt-name { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; padding-right: 10px; }
+  .alt-cal { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--muted); flex-shrink: 0; }
+  .alt-serving { font-size: 11px; color: var(--blue); font-family: 'DM Mono', monospace; margin-bottom: 8px; }
+  .alt-desc { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 8px; }
+  .alt-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+  .selected-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; color: var(--gold); font-weight: 700;
+    margin-left: 6px; vertical-align: middle;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-hdr {
+    font-family: 'Bebas Neue', sans-serif; font-size: 20px;
+    letter-spacing: 2px; color: var(--gold);
+    margin: 20px 0 12px; padding-left: 4px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-hdr::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── SHOPPING LIST ── */
+  .shop-category {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; margin-bottom: 10px; overflow: hidden;
+  }
+  .shop-cat-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; cursor: pointer;
+    font-weight: 600; font-size: 14px;
+  }
+  .shop-cat-header .cat-icon { margin-right: 8px; font-size: 18px; }
+  .shop-items { padding: 0 16px 14px; display: none; }
+  .shop-category.open .shop-items { display: block; }
+  .shop-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 0; border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .shop-item:last-child { border-bottom: none; }
+  .shop-checkbox {
+    width: 20px; height: 20px; border-radius: 6px;
+    border: 1.5px solid var(--border); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .shop-item.ticked .shop-checkbox { background: var(--green); border-color: var(--green); }
+  .shop-item-name { font-size: 13px; flex: 1; }
+  .shop-item.ticked .shop-item-name { text-decoration: line-through; color: var(--muted); }
+  .shop-item-qty { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .clear-btn {
+    width: 100%; margin-top: 12px; padding: 12px;
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--muted); border-radius: 12px; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; cursor: pointer;
+  }
+
+  /* ── SUPPLEMENTS ── */
+  .supp-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px; margin-bottom: 10px;
+  }
+  .supp-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+  .supp-name { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; color: var(--gold); }
+  .supp-badge { font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: 600; margin-top: 4px; }
+  .badge-high { background: rgba(61,220,132,0.15); color: var(--green); }
+  .badge-mod  { background: rgba(212,168,67,0.15); color: var(--gold); }
+  .supp-dose { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--blue); margin-bottom: 6px; }
+  .supp-timing { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+  .supp-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .supp-benefits { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+  .benefit-tag { font-size: 10px; padding: 3px 8px; border-radius: 8px; background: var(--bg3); color: var(--muted); }
+
+  /* ── PROGRESS ── */
+  .progress-week {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+    margin-bottom: 16px;
+  }
+  .prog-day {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 8px 4px; text-align: center;
+  }
+  .prog-day.has-data { border-color: rgba(212,168,67,0.3); }
+  .prog-day-name { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .prog-day-pct { font-family: 'Bebas Neue', sans-serif; font-size: 18px; margin: 2px 0; }
+  .prog-day-meals { font-size: 9px; color: var(--muted); }
+  .prog-ring { width: 28px; height: 28px; margin: 4px auto 0; }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px;
+  }
+  .stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 30px; color: var(--gold); line-height: 1; }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  /* ── INSTALL BANNER ── */
+  .install-banner {
+    background: linear-gradient(135deg, rgba(212,168,67,0.12), rgba(212,168,67,0.04));
+    border: 1px solid rgba(212,168,67,0.3);
+    border-radius: 14px; padding: 14px 16px; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .install-icon { font-size: 24px; flex-shrink: 0; }
+  .install-text { flex: 1; font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .install-text strong { color: var(--gold); display: block; font-size: 13px; margin-bottom: 2px; }
+  .install-close { color: var(--muted); font-size: 18px; cursor: pointer; padding: 4px; flex-shrink: 0; }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,10,15,0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .bottom-nav .nav-tab { padding: 10px 4px 8px; font-size: 10px; border-radius: 0; }
+
+  /* ── RESET ── */
+  .reset-btn {
+    width: 100%; margin-top: 16px; padding: 14px;
+    background: rgba(255,77,109,0.08); border: 1.5px solid rgba(255,77,109,0.3);
+    color: var(--red); border-radius: 14px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .reset-btn:active { background: rgba(255,77,109,0.18); }
+
+  /* ── CONFIRM MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 999;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    align-items: flex-end; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 24px 24px 0 0; padding: 28px 24px 40px;
+    width: 100%; max-width: 480px;
+    animation: slideUp 0.25s cubic-bezier(.4,0,.2,1);
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-icon { font-size: 40px; text-align: center; margin-bottom: 12px; }
+  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--text); text-align: center; letter-spacing: 1px; margin-bottom: 8px; }
+  .modal-desc { font-size: 13px; color: var(--muted); text-align: center; line-height: 1.6; margin-bottom: 24px; }
+  .modal-actions { display: flex; flex-direction: column; gap: 10px; }
+  .modal-confirm {
+    padding: 14px; border-radius: 14px; border: none;
+    background: var(--red); color: #fff;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700;
+    cursor: pointer;
+  }
+  .modal-cancel {
+    padding: 14px; border-radius: 14px;
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--muted); font-family: 'DM Sans', sans-serif;
+    font-size: 14px; cursor: pointer;
+  }
+
+  /* ── UTILS ── */
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 14px; }
+  svg.check-icon { display: none; }
+  .meal-card.checked .check-icon { display: block; }
+  .meal-card.checked .uncheck-icon { display: none; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-top">
+    <div>
+      <div class="app-title">T-DIET</div>
+      <div class="app-subtitle">Testosterone Meal Plan · 38yr · 600 ng/dL</div>
+    </div>
+    <div class="streak-badge" id="streakBadge">🔥 0 days</div>
+  </div>
+</div>
+
+<div id="screenMeals" class="screen active">
+  <div class="install-banner" id="installBanner">
+    <div class="install-icon">📲</div>
+    <div class="install-text">
+      <strong>Add to Home Screen</strong>
+      Tap Share → "Add to Home Screen" in Safari to install this as an app
+    </div>
+    <div class="install-close" onclick="document.getElementById('installBanner').style.display='none'">✕</div>
+  </div>
+
+  <div class="day-scroll" id="dayScroll"></div>
+  <div class="macro-summary">
+    <div class="cal-display">
+      <div class="cal-num" id="calDisplay">0</div>
+      <div class="cal-label">of <span id="calTarget">2600</span> kcal checked</div>
+    </div>
+    <div class="macro-bars">
+      <div class="macro-row">
+        <div class="macro-label">Protein</div>
+        <div class="macro-bar-wrap"><div class="macro-bar-fill" id="barP" style="width:0%;background:#4d9fff"></div></div>
+        <div class="macro-val" id="valP">0 / 0g</div>
+      </div>
+      <div class="macro-row">
+        <div class="macro-label">Carbs</div>
+        <div class="macro-bar-wrap"><div class="macro-bar-fill" id="barC" style="width:0%;background:#d4a843"></div></div>
+        <div class="macro-val" id="valC">0 / 0g</div>
+      </div>
+      <div class="macro-row">
+        <div class="macro-label">Fat</div>
+        <div class="macro-bar-wrap"><div class="macro-bar-fill" id="barF" style="width:0%;background:#ff4d6d"></div></div>
+        <div class="macro-val" id="valF">0 / 0g</div>
+      </div>
+    </div>
+  </div>
+  <div id="mealList"></div>
+</div>
+
+<div id="screenShop" class="screen">
+  <div class="section-hdr">Shopping List</div>
+  <div id="shopList"></div>
+</div>
+
+<div id="screenSupps" class="screen">
+  <div class="section-hdr">Supplements</div>
+  <div id="suppList"></div>
+</div>
+
+<div id="screenProgress" class="screen">
+  <div class="section-hdr">Weekly Progress</div>
+  <div class="progress-week" id="weekGrid"></div>
+  <div class="stats-grid" id="statsGrid"></div>
+  <div class="section-hdr">Macro Averages</div>
+  <div id="macroAvgCards"></div>
+</div>
+
+<!-- Meal Picker Sheet -->
+<div class="picker-overlay" id="pickerOverlay">
+  <div class="picker-sheet">
+    <div class="picker-handle"></div>
+    <div class="picker-header">
+      <div>
+        <div class="picker-title" id="pickerTitle">Choose Meal</div>
+        <div class="picker-subtitle" id="pickerSubtitle">Tap an alternative to swap</div>
+      </div>
+      <div class="picker-close" onclick="closePicker()">✕</div>
+    </div>
+    <div class="picker-scroll" id="pickerScroll"></div>
+  </div>
+</div>
+
+<!-- Reset Confirmation Modal -->
+<div class="modal-overlay" id="resetModal">
+  <div class="modal-sheet">
+    <div class="modal-icon">🔄</div>
+    <div class="modal-title">Reset This Week?</div>
+    <div class="modal-desc">This will clear all checked meals and reset your progress for the week. Your shopping list will not be affected.</div>
+    <div class="modal-actions">
+      <button class="modal-confirm" onclick="confirmReset()">Yes, Reset Week</button>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <button class="nav-tab active" onclick="showScreen('Meals',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+    Meals
+  </button>
+  <button class="nav-tab" onclick="showScreen('Shop',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    Shopping
+  </button>
+  <button class="nav-tab" onclick="showScreen('Supps',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+    Supps
+  </button>
+  <button class="nav-tab" onclick="showScreen('Progress',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Progress
+  </button>
+</div>
+
+<script>
+// ── MEAL ALTERNATIVES LIBRARY (shared by meal type) ──
+const ALTERNATIVES = {
+  Breakfast: [
+    { name:'Scrambled Eggs + Avocado + Black Coffee', desc:'3 large scrambled eggs with ½ avocado sliced. Black coffee or with a splash of almond milk.', serving:'3 eggs / 75g avocado', cal:430, p:22, c:14, f:33 },
+    { name:'Overnight Oats + Chia + Almond Butter + Banana', desc:'Rolled oats soaked overnight in almond milk, topped with chia seeds, almond butter, and sliced banana.', serving:'80g oats / 15g chia / 2 tbsp AB / 1 banana', cal:520, p:18, c:68, f:18 },
+    { name:'Egg Omelette + Mushrooms + Feta + Avocado', desc:'3-egg omelette with sautéed mushrooms, crumbled feta cheese, and a side of sliced avocado.', serving:'3 eggs / 80g mushrooms / 30g feta / 75g avocado', cal:460, p:38, c:6, f:32 },
+    { name:'Protein Smoothie + Spinach + Banana + Nut Butter', desc:'Blend spinach, banana, 1 scoop whey protein, almond milk, and 1 tbsp nut butter for a hormone-supporting morning shake.', serving:'2 cups spinach / 1 banana / 1 scoop whey / 250ml / 1 tbsp', cal:480, p:36, c:54, f:12 },
+    { name:'Eggs + Whole Grain Toast + Smashed Avocado', desc:'3 eggs (fried or scrambled) on whole grain toast with smashed avocado and cherry tomatoes.', serving:'3 eggs / 2 slices / 75g avocado / 80g tomatoes', cal:490, p:24, c:38, f:28 },
+    { name:'Veggie Frittata + Avocado', desc:'Baked frittata with 3 eggs, spinach, red peppers, onion, and crumbled feta. Served with sliced avocado.', serving:'3 eggs / 80g veg / 30g feta / 75g avocado', cal:470, p:30, c:14, f:34 },
+    { name:'Smoked Salmon Bagel + Cream Cheese + Eggs', desc:'Whole grain bagel with cream cheese, smoked salmon, capers, and red onion. Served with 2 scrambled eggs on the side.', serving:'80g salmon / 1 bagel / 2 tbsp cream cheese / 2 eggs', cal:520, p:36, c:44, f:18 },
+    { name:'Greek Yogurt Parfait + Granola + Berries + Nuts', desc:'Layered full-fat Greek yogurt with low-sugar granola, mixed berries, and a sprinkle of walnuts. High protein, quick to make.', serving:'200g yogurt / 40g granola / 80g berries / 20g nuts', cal:400, p:22, c:42, f:14 },
+  ],
+  Snack: [
+    { name:'Brazil Nuts + Orange', desc:'A small handful of Brazil nuts alongside a whole orange. Just 2-3 Brazil nuts covers your full daily selenium needs.', serving:'30g nuts / 1 medium orange', cal:215, p:5, c:22, f:14 },
+    { name:'Hard Boiled Eggs + Pumpkin Seeds', desc:'Two hard boiled eggs with a small handful of raw pumpkin seeds. High in zinc for testosterone support.', serving:'2 eggs / 30g seeds', cal:250, p:18, c:5, f:18 },
+    { name:'Full-Fat Greek Yogurt + Blueberries + Honey', desc:'Full-fat Greek yogurt topped with fresh blueberries and a drizzle of raw honey.', serving:'200g / 80g / 1 tsp', cal:230, p:18, c:26, f:6 },
+    { name:'Mixed Nuts + Dark Chocolate (85%+)', desc:'A small mix of almonds, cashews, and walnuts with a couple squares of 85%+ dark chocolate. Rich in magnesium.', serving:'30g nuts / 25g chocolate', cal:270, p:6, c:14, f:22 },
+    { name:'Cottage Cheese + Walnuts + Strawberries', desc:'Full-fat cottage cheese with walnuts and fresh or frozen strawberries. Great slow-digesting protein.', serving:'150g / 20g / 80g', cal:230, p:20, c:14, f:10 },
+    { name:'Apple + Almond Butter', desc:'A medium apple with 2 tbsp almond butter for dipping. Simple, satisfying, and rich in healthy fats.', serving:'1 medium apple / 2 tbsp AB', cal:230, p:5, c:32, f:10 },
+    { name:'Pumpkin Seeds + Banana', desc:'A handful of raw pumpkin seeds with a medium banana. Quick zinc and potassium hit pre-workout.', serving:'30g / 1 medium banana', cal:200, p:7, c:34, f:7 },
+    { name:'Whey Protein Shake + Almond Milk + Berries', desc:'1 scoop whey protein blended with almond milk and frozen mixed berries. Great post-workout recovery.', serving:'1 scoop / 250ml / 80g berries', cal:220, p:24, c:24, f:4 },
+    { name:'Cottage Cheese + Pineapple', desc:'Full-fat cottage cheese with fresh or canned pineapple chunks. Bromelain in pineapple aids protein digestion.', serving:'150g / 80g', cal:180, p:18, c:20, f:2 },
+    { name:'Hard Boiled Eggs + Celery Sticks', desc:'Two hard boiled eggs with crunchy celery sticks. Simple protein-packed snack.', serving:'2 eggs / 2 stalks', cal:170, p:14, c:4, f:10 },
+  ],
+  Lunch: [
+    { name:'Grilled Salmon + Quinoa + Roasted Broccoli', desc:'6oz grilled salmon fillet with cooked quinoa and roasted broccoli drizzled with 1 tbsp olive oil and lemon.', serving:'170g / 150g / 100g', cal:620, p:48, c:44, f:22 },
+    { name:'Chicken Breast + Sweet Potato + Steamed Spinach', desc:'Grilled or baked chicken breast with a baked sweet potato and steamed spinach drizzled with olive oil.', serving:'170g / 200g / 80g / 1 tbsp oil', cal:560, p:50, c:46, f:14 },
+    { name:'Beef Stir Fry + Bok Choy + Brown Rice', desc:'Lean beef strips stir-fried with bell peppers, bok choy, and garlic in a light coconut aminos sauce. Served over brown rice.', serving:'150g beef / 100g veg / 150g rice', cal:590, p:40, c:52, f:18 },
+    { name:'Tuna Salad + Mixed Greens + Avocado + Pumpkin Seeds', desc:'Chunk light tuna in olive oil over mixed greens with sliced avocado, pumpkin seeds, and a lemon-olive oil dressing.', serving:'150g tuna / 60g greens / 75g avocado / 20g seeds', cal:490, p:42, c:12, f:30 },
+    { name:'Tuna on Whole Grain Crackers + Hummus + Cucumber', desc:'Tuna in olive oil on whole grain crackers with sliced cucumber and a side of hummus for dipping.', serving:'120g tuna / 8 crackers / 80g hummus', cal:460, p:34, c:34, f:18 },
+    { name:'Grilled Chicken + Garlic Butter + Quinoa + Salad', desc:'Herb-marinated grilled chicken breast with garlic butter sauce, a fresh side salad, and cooked quinoa.', serving:'170g chicken / 1 tbsp butter / 150g quinoa', cal:560, p:44, c:46, f:16 },
+    { name:'Chicken Caesar Salad + Parmesan + Boiled Egg', desc:'Grilled chicken over romaine lettuce with parmesan, olive oil Caesar dressing, and a sliced hard-boiled egg.', serving:'170g chicken / 60g greens / 1 tbsp dressing / 1 egg', cal:490, p:48, c:10, f:28 },
+    { name:'Ground Beef Bowl + Black Beans + Brown Rice + Avocado', desc:'Seasoned grass-fed ground beef over brown rice with black beans, avocado, salsa, and a squeeze of lime.', serving:'150g beef / 100g beans / 150g rice / 60g avocado', cal:640, p:46, c:58, f:22 },
+  ],
+  Dinner: [
+    { name:'Grass-Fed Beef Tacos (Lettuce Wraps) + Guacamole', desc:'Seasoned grass-fed ground beef in butter lettuce wraps with salsa and guacamole. Skip the tortilla for lower carbs.', serving:'170g beef / 60g guac', cal:540, p:42, c:12, f:36 },
+    { name:'Baked Cod + Roasted Asparagus + Brown Rice', desc:'Baked cod fillet with roasted asparagus and cooked brown rice, finished with lemon juice and butter.', serving:'170g / 120g / 150g', cal:510, p:46, c:44, f:12 },
+    { name:'Lamb Chops + Brussels Sprouts + Mashed Sweet Potato', desc:'Grilled lamb chops with roasted Brussels sprouts and mashed sweet potato. Lamb is one of the richest sources of zinc.', serving:'170g / 120g / 150g', cal:600, p:44, c:40, f:28 },
+    { name:'Grilled Chicken Thighs + Cauliflower Rice + Broccoli', desc:'Skin-on grilled chicken thighs over cauliflower rice with roasted broccoli and garlic. High protein, lower carb.', serving:'200g / 200g / 120g broccoli', cal:540, p:50, c:18, f:28 },
+    { name:'Grilled Ribeye + Roasted Asparagus + Baked Potato', desc:'A well-seasoned 6oz grass-fed ribeye with roasted asparagus and a baked potato with a dollop of sour cream.', serving:'170g steak / 120g / 1 medium potato', cal:620, p:48, c:38, f:28 },
+    { name:'Slow-Cooked Beef Stew + Root Vegetables + Kale Salad', desc:'Tender slow-cooked grass-fed beef with root vegetables (carrots, parsnips, sweet potato) in a rich broth. Served with a fresh kale salad.', serving:'200g beef / 150g veg / 80g kale', cal:600, p:46, c:42, f:24 },
+    { name:'Baked Salmon + Sweet Potato + Steamed Broccoli', desc:'Baked salmon fillet with a roasted sweet potato and steamed broccoli, finished with lemon and olive oil.', serving:'170g / 150g / 120g', cal:560, p:46, c:44, f:18 },
+    { name:'Turkey Meatballs + Zucchini Noodles + Tomato Sauce', desc:'Lean turkey meatballs over spiralized zucchini noodles in a rich tomato and garlic sauce. Lower carb, high protein.', serving:'200g turkey / 200g zucchini / 120g sauce', cal:480, p:48, c:18, f:22 },
+    { name:'Chicken Stir Fry + Mixed Veg + Egg Noodles', desc:'Diced chicken thighs stir-fried with broccoli, snap peas, and carrots in a light sesame-ginger sauce over egg noodles.', serving:'180g chicken / 120g veg / 100g noodles', cal:540, p:46, c:46, f:14 },
+  ],
+};
+
+// ── DATA — each meal slot references the first alternative by default ──
+const DAYS = [
+  { name:'Mon', meals:[
+    { type:'Breakfast', altIdx:0 },
+    { type:'Snack',     altIdx:0 },
+    { type:'Lunch',     altIdx:0 },
+    { type:'Snack',     altIdx:1 },
+    { type:'Dinner',    altIdx:0 },
+  ]},
+  { name:'Tue', meals:[
+    { type:'Breakfast', altIdx:1 },
+    { type:'Snack',     altIdx:1 },
+    { type:'Lunch',     altIdx:1 },
+    { type:'Snack',     altIdx:2 },
+    { type:'Dinner',    altIdx:1 },
+  ]},
+  { name:'Wed', meals:[
+    { type:'Breakfast', altIdx:2 },
+    { type:'Snack',     altIdx:5 },
+    { type:'Lunch',     altIdx:2 },
+    { type:'Snack',     altIdx:3 },
+    { type:'Dinner',    altIdx:2 },
+  ]},
+  { name:'Thu', meals:[
+    { type:'Breakfast', altIdx:3 },
+    { type:'Snack',     altIdx:3 },
+    { type:'Lunch',     altIdx:3 },
+    { type:'Snack',     altIdx:9 },
+    { type:'Dinner',    altIdx:3 },
+  ]},
+  { name:'Fri', meals:[
+    { type:'Breakfast', altIdx:4 },
+    { type:'Snack',     altIdx:2 },
+    { type:'Lunch',     altIdx:4 },
+    { type:'Snack',     altIdx:6 },
+    { type:'Dinner',    altIdx:4 },
+  ]},
+  { name:'Sat', meals:[
+    { type:'Breakfast', altIdx:5 },
+    { type:'Snack',     altIdx:4 },
+    { type:'Lunch',     altIdx:5 },
+    { type:'Snack',     altIdx:7 },
+    { type:'Dinner',    altIdx:5 },
+  ]},
+  { name:'Sun', meals:[
+    { type:'Breakfast', altIdx:6 },
+    { type:'Snack',     altIdx:0 },
+    { type:'Lunch',     altIdx:6 },
+    { type:'Snack',     altIdx:8 },
+    { type:'Dinner',    altIdx:6 },
+  ]},
+];
+
+const SHOP = [
+  { cat:'🥩 Proteins', items:[
+    { name:'Salmon fillets',      qty:'4 fillets (~680g)' },
+    { name:'Grass-fed ground beef', qty:'500g' },
+    { name:'Chicken breasts',    qty:'500g' },
+    { name:'Chicken thighs',     qty:'300g' },
+    { name:'Lamb chops',         qty:'300g' },
+    { name:'Eggs',               qty:'18 large' },
+    { name:'Full-fat Greek yogurt', qty:'1kg tub' },
+    { name:'Canned tuna (in olive oil)', qty:'3 cans' },
+    { name:'Smoked salmon',      qty:'150g pack' },
+    { name:'Cottage cheese',     qty:'500g' },
+    { name:'Cod fillets',        qty:'2 fillets' },
+    { name:'Whey protein powder',qty:'1 tub' },
+    { name:'Feta cheese',        qty:'200g' },
+    { name:'Turkey mince',       qty:'300g' },
+  ]},
+  { cat:'🥑 Healthy Fats', items:[
+    { name:'Avocados',           qty:'6-7 medium' },
+    { name:'Extra virgin olive oil', qty:'1 bottle' },
+    { name:'Brazil nuts',        qty:'100g bag' },
+    { name:'Walnuts',            qty:'100g bag' },
+    { name:'Almond butter',      qty:'1 jar' },
+    { name:'Mixed nuts',         qty:'150g bag' },
+    { name:'Dark chocolate 85%+',qty:'200g bar' },
+    { name:'Pumpkin seeds',      qty:'150g bag' },
+    { name:'Chia seeds',         qty:'100g bag' },
+    { name:'Cream cheese',       qty:'small tub' },
+  ]},
+  { cat:'🍠 Carbohydrates', items:[
+    { name:'Sweet potatoes',     qty:'4-5 medium' },
+    { name:'Quinoa',             qty:'500g bag' },
+    { name:'Brown rice',         qty:'500g bag' },
+    { name:'Rolled oats',        qty:'500g bag' },
+    { name:'Whole grain bread',  qty:'1 loaf' },
+    { name:'Whole grain bagels', qty:'pack of 4' },
+    { name:'Whole grain crackers',qty:'1 box' },
+    { name:'Bananas',            qty:'6-7' },
+    { name:'Granola (low sugar)',qty:'200g' },
+    { name:'Egg noodles',        qty:'200g' },
+  ]},
+  { cat:'🥦 Vegetables', items:[
+    { name:'Broccoli',           qty:'2 heads' },
+    { name:'Brussels sprouts',   qty:'300g bag' },
+    { name:'Spinach',            qty:'large bag (200g)' },
+    { name:'Cauliflower',        qty:'1 head' },
+    { name:'Asparagus',          qty:'2 bundles' },
+    { name:'Kale',               qty:'1 bunch' },
+    { name:'Bok choy',           qty:'1 head' },
+    { name:'Bell peppers',       qty:'3 mixed' },
+    { name:'Mushrooms',          qty:'200g punnet' },
+    { name:'Cherry tomatoes',    qty:'punnet' },
+    { name:'Celery',             qty:'1 bunch' },
+    { name:'Garlic',             qty:'1 bulb' },
+    { name:'Zucchini',           qty:'2 medium' },
+  ]},
+  { cat:'🍓 Fruit', items:[
+    { name:'Blueberries',        qty:'punnet (150g)' },
+    { name:'Raspberries',        qty:'punnet' },
+    { name:'Strawberries',       qty:'punnet (150g)' },
+    { name:'Oranges',            qty:'3-4' },
+    { name:'Apples',             qty:'3' },
+    { name:'Pineapple',          qty:'1 small / canned' },
+  ]},
+  { cat:'🧄 Pantry', items:[
+    { name:'Hummus',             qty:'1 tub' },
+    { name:'Honey (raw)',        qty:'small jar' },
+    { name:'Mixed seeds',        qty:'100g' },
+    { name:'Lemons',             qty:'4-5' },
+    { name:'Almond milk',        qty:'1 litre' },
+    { name:'Coconut aminos',     qty:'small bottle' },
+    { name:'Sour cream',         qty:'small tub' },
+    { name:'Black beans (canned)',qty:'1 can' },
+    { name:'Tomato pasta sauce', qty:'1 jar' },
+  ]},
+];
+
+const SUPPS = [
+  { name:'Omega-3 Fish Oil', badge:'High Evidence', badgeClass:'badge-high', dose:'2-3g EPA+DHA daily', timing:'⏰ Take with your largest meal (lunch or dinner)', desc:'Omega-3 fatty acids reduce systemic inflammation, which is a key driver of testosterone suppression. They also improve the sensitivity of androgen receptors, meaning your body can use the testosterone it produces more effectively.', benefits:['Reduces inflammation','Androgen receptor sensitivity','Heart health','Brain function','Mood support'] },
+  { name:'ZMA (Zinc + Magnesium)', badge:'High Evidence', badgeClass:'badge-high', dose:'Zinc 30mg + Magnesium 450mg', timing:'⏰ Take 30-60 min before bed on an empty stomach', desc:'Zinc is a direct cofactor in testosterone biosynthesis — even mild deficiency causes significant drops in T levels. Magnesium increases free testosterone by reducing the binding of testosterone to SHBG (sex hormone binding globulin). Taking them together before sleep maximizes the nocturnal testosterone pulse.', benefits:['Testosterone synthesis','Free T levels','Sleep quality','Muscle recovery','Immune support'] },
+  { name:'Ashwagandha (KSM-66)', badge:'Moderate Evidence', badgeClass:'badge-mod', dose:'300-600mg daily', timing:'⏰ Take with breakfast or before bed', desc:'Ashwagandha is an adaptogen that lowers cortisol levels. Since cortisol and testosterone have an inverse relationship, chronically high stress can silently tank your T levels. Studies using KSM-66 extract show an average increase of ~15-17% in testosterone with consistent use over 8-12 weeks.', benefits:['Cortisol reduction','Stress resilience','Testosterone support','Muscle strength','Sleep quality'] },
+  { name:'Creatine Monohydrate', badge:'High Evidence', badgeClass:'badge-high', dose:'5g daily', timing:'⏰ Any time — post-workout is ideal. No loading needed.', desc:'Creatine is the most researched supplement in sports science. It increases DHT (dihydrotestosterone), a potent androgen derived from testosterone. It also dramatically improves strength and muscle output during training, and resistance training is itself one of the most powerful natural stimulators of testosterone production.', benefits:['DHT increase','Strength output','Muscle mass','Brain energy','Training performance'] },
+];
+
+// ── STATE ──
+let state = {
+  currentDay: new Date().getDay() === 0 ? 6 : new Date().getDay() - 1,
+  checked:  JSON.parse(localStorage.getItem('tdiet_checked')  || '{}'),
+  shopped:  JSON.parse(localStorage.getItem('tdiet_shopped')  || '{}'),
+  swaps:    JSON.parse(localStorage.getItem('tdiet_swaps')    || '{}'),
+};
+
+// Get the active meal object for a given day+mealIndex
+function getActiveMeal(dayIdx, mealIdx) {
+  const slot = DAYS[dayIdx].meals[mealIdx];
+  const swapKey = `${dayIdx}_${mealIdx}`;
+  const altIdx = state.swaps[swapKey] !== undefined ? state.swaps[swapKey] : slot.altIdx;
+  return { ...ALTERNATIVES[slot.type][altIdx], type: slot.type };
+}
+
+function save() {
+  localStorage.setItem('tdiet_checked', JSON.stringify(state.checked));
+  localStorage.setItem('tdiet_shopped', JSON.stringify(state.shopped));
+  localStorage.setItem('tdiet_swaps',   JSON.stringify(state.swaps));
+}
+
+// ── NAV ──
+function showScreen(name, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'Progress') renderProgress();
+}
+
+// ── MEALS SCREEN ──
+function renderDayTabs() {
+  const names = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const wrap = document.getElementById('dayScroll');
+  wrap.innerHTML = '';
+  names.forEach((n, i) => {
+    const dayChecked = DAYS[i].meals.filter((_,mi) => state.checked[`${i}_${mi}`]).length;
+    const total = DAYS[i].meals.length;
+    const btn = document.createElement('button');
+    btn.className = 'day-btn' + (i === state.currentDay ? ' active' : '') + (dayChecked === total ? ' complete' : '');
+    btn.innerHTML = `<span class="day-name">${n}</span><span class="day-num">${i+1}</span>`;
+    btn.onclick = () => { state.currentDay = i; renderDayTabs(); renderMeals(); };
+    wrap.appendChild(btn);
+  });
+}
+
+function renderMeals() {
+  const day = DAYS[state.currentDay];
+  const list = document.getElementById('mealList');
+  list.innerHTML = '';
+
+  let totalCal=0, totalP=0, totalC=0, totalF=0;
+  let checkedCal=0, checkedP=0, checkedC=0, checkedF=0;
+
+  day.meals.forEach((slot, mi) => {
+    const m = getActiveMeal(state.currentDay, mi);
+    const key = `${state.currentDay}_${mi}`;
+    const isChecked = !!state.checked[key];
+    totalCal+=m.cal; totalP+=m.p; totalC+=m.c; totalF+=m.f;
+    if (isChecked) { checkedCal+=m.cal; checkedP+=m.p; checkedC+=m.c; checkedF+=m.f; }
+
+    const card = document.createElement('div');
+    card.className = 'meal-card' + (isChecked ? ' checked' : '');
+    card.id = `card_${state.currentDay}_${mi}`;
+    card.innerHTML = `
+      <div class="meal-header" onclick="toggleExpand(this.parentElement)">
+        <button class="meal-check" onclick="event.stopPropagation();toggleMeal(${state.currentDay},${mi},this.closest('.meal-card'))">
+          <svg class="check-icon meal-check-inner" viewBox="0 0 12 12" fill="none">
+            <path d="M2 6l3 3 5-5" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="meal-info">
+          <div class="meal-type">${m.type}</div>
+          <div class="meal-name">${m.name}</div>
+        </div>
+        <div class="meal-cals">${m.cal} kcal</div>
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="meal-expand">
+        <div class="meal-desc">${m.desc}</div>
+        <div class="meal-serving">📏 ${m.serving}</div>
+        <div class="macro-chips">
+          <span class="chip chip-p">P ${m.p}g</span>
+          <span class="chip chip-c">C ${m.c}g</span>
+          <span class="chip chip-f">F ${m.f}g</span>
+        </div>
+        <button class="swap-btn" onclick="event.stopPropagation();openPicker(${state.currentDay},${mi})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+          SWAP MEAL
+        </button>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+
+  updateMacroBars(checkedCal, totalCal, checkedP, totalP, checkedC, totalC, checkedF, totalF);
+}
+
+function updateMacroBars(chCal, totCal, chP, totP, chC, totC, chF, totF) {
+  document.getElementById('calDisplay').textContent = chCal;
+  document.getElementById('calTarget').textContent = totCal;
+  document.getElementById('barP').style.width = (totP ? Math.min(100, chP/totP*100) : 0) + '%';
+  document.getElementById('barC').style.width = (totC ? Math.min(100, chC/totC*100) : 0) + '%';
+  document.getElementById('barF').style.width = (totF ? Math.min(100, chF/totF*100) : 0) + '%';
+  document.getElementById('valP').textContent = `${chP} / ${totP}g`;
+  document.getElementById('valC').textContent = `${chC} / ${totC}g`;
+  document.getElementById('valF').textContent = `${chF} / ${totF}g`;
+}
+
+function toggleExpand(card) { card.classList.toggle('open'); }
+
+function toggleMeal(dayIdx, mealIdx, card) {
+  const key = `${dayIdx}_${mealIdx}`;
+  state.checked[key] = !state.checked[key];
+  card.classList.toggle('checked', state.checked[key]);
+  save();
+  renderMeals();
+  renderDayTabs();
+  updateStreak();
+}
+
+function updateStreak() {
+  let streak = 0;
+  for (let i = 6; i >= 0; i--) {
+    const done = DAYS[i].meals.filter((_,mi) => state.checked[`${i}_${mi}`]).length;
+    if (done > 0) streak++; else break;
+  }
+  document.getElementById('streakBadge').textContent = `🔥 ${streak} day${streak!==1?'s':''}`;
+}
+
+// ── MEAL PICKER ──
+let _pickerDay = 0, _pickerMeal = 0;
+
+function openPicker(dayIdx, mealIdx) {
+  _pickerDay = dayIdx; _pickerMeal = mealIdx;
+  const slot = DAYS[dayIdx].meals[mealIdx];
+  const swapKey = `${dayIdx}_${mealIdx}`;
+  const currentAltIdx = state.swaps[swapKey] !== undefined ? state.swaps[swapKey] : slot.altIdx;
+  const alts = ALTERNATIVES[slot.type];
+
+  document.getElementById('pickerTitle').textContent = `${slot.type} Options`;
+  document.getElementById('pickerSubtitle').textContent = `${alts.length} meals available — tap to swap`;
+
+  const scroll = document.getElementById('pickerScroll');
+  scroll.innerHTML = '';
+
+  alts.forEach((alt, idx) => {
+    const isSelected = idx === currentAltIdx;
+    const div = document.createElement('div');
+    div.className = 'alt-card' + (isSelected ? ' selected' : '');
+    div.innerHTML = `
+      <div class="alt-card-top">
+        <div class="alt-name">${alt.name}${isSelected ? '<span class="selected-badge">✓ Current</span>' : ''}</div>
+        <div class="alt-cal">${alt.cal} kcal</div>
+      </div>
+      <div class="alt-serving">📏 ${alt.serving}</div>
+      <div class="alt-desc">${alt.desc}</div>
+      <div class="alt-chips">
+        <span class="chip chip-p">P ${alt.p}g</span>
+        <span class="chip chip-c">C ${alt.c}g</span>
+        <span class="chip chip-f">F ${alt.f}g</span>
+      </div>
+    `;
+    div.onclick = () => selectAlt(idx);
+    scroll.appendChild(div);
+  });
+
+  document.getElementById('pickerOverlay').classList.add('open');
+}
+
+function selectAlt(altIdx) {
+  const swapKey = `${_pickerDay}_${_pickerMeal}`;
+  state.swaps[swapKey] = altIdx;
+  // if meal was checked, uncheck it since it changed
+  if (state.checked[swapKey]) {
+    state.checked[swapKey] = false;
+  }
+  save();
+  closePicker();
+  renderMeals();
+  renderDayTabs();
+}
+
+function closePicker() {
+  document.getElementById('pickerOverlay').classList.remove('open');
+}
+
+document.getElementById('pickerOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closePicker();
+});
+
+// ── SHOPPING ──
+function renderShop() {
+  const wrap = document.getElementById('shopList');
+  wrap.innerHTML = '';
+  SHOP.forEach((cat, ci) => {
+    const div = document.createElement('div');
+    div.className = 'shop-category';
+    const ticked = cat.items.filter((_,ii) => state.shopped[`${ci}_${ii}`]).length;
+    div.innerHTML = `
+      <div class="shop-cat-header" onclick="this.parentElement.classList.toggle('open')">
+        <span>${cat.cat} <span style="color:var(--muted);font-size:11px;font-weight:400">(${ticked}/${cat.items.length})</span></span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="shop-items">
+        ${cat.items.map((item,ii) => `
+          <div class="shop-item${state.shopped[`${ci}_${ii}`]?' ticked':''}" onclick="toggleShop(${ci},${ii},this)">
+            <div class="shop-checkbox">
+              ${state.shopped[`${ci}_${ii}`] ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
+            </div>
+            <div class="shop-item-name">${item.name}</div>
+            <div class="shop-item-qty">${item.qty}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    wrap.appendChild(div);
+  });
+  const clearBtn = document.createElement('button');
+  clearBtn.className = 'clear-btn';
+  clearBtn.textContent = 'Clear All Ticked Items';
+  clearBtn.onclick = () => { state.shopped = {}; save(); renderShop(); };
+  wrap.appendChild(clearBtn);
+}
+
+function toggleShop(ci, ii, el) {
+  const key = `${ci}_${ii}`;
+  state.shopped[key] = !state.shopped[key];
+  save();
+  renderShop();
+}
+
+// ── SUPPLEMENTS ──
+function renderSupps() {
+  const wrap = document.getElementById('suppList');
+  wrap.innerHTML = '';
+  SUPPS.forEach(s => {
+    wrap.innerHTML += `
+      <div class="supp-card">
+        <div class="supp-header">
+          <div class="supp-name">${s.name}</div>
+          <span class="supp-badge ${s.badgeClass}">${s.badge}</span>
+        </div>
+        <div class="supp-dose">💊 ${s.dose}</div>
+        <div class="supp-timing">${s.timing}</div>
+        <div class="supp-desc">${s.desc}</div>
+        <div class="supp-benefits">${s.benefits.map(b=>`<span class="benefit-tag">${b}</span>`).join('')}</div>
+      </div>
+    `;
+  });
+}
+
+// ── PROGRESS ──
+function renderProgress() {
+  const grid = document.getElementById('weekGrid');
+  grid.innerHTML = '';
+  const dayNames = ['M','T','W','T','F','S','S'];
+  let totalMealsChecked=0, totalMeals=0, daysActive=0;
+
+  DAYS.forEach((day, i) => {
+    const done = day.meals.filter((_,mi) => state.checked[`${i}_${mi}`]).length;
+    const total = day.meals.length;
+    const pct = total ? Math.round(done/total*100) : 0;
+    totalMealsChecked+=done; totalMeals+=total;
+    if (done > 0) daysActive++;
+    const color = pct===100 ? 'var(--green)' : pct>50 ? 'var(--gold)' : pct>0 ? 'var(--blue)' : 'var(--muted)';
+    grid.innerHTML += `
+      <div class="prog-day${done>0?' has-data':''}">
+        <div class="prog-day-name">${dayNames[i]}</div>
+        <svg class="prog-ring" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="15" fill="none" stroke="var(--border)" stroke-width="3"/>
+          <circle cx="18" cy="18" r="15" fill="none" stroke="${color}" stroke-width="3"
+            stroke-dasharray="${pct*94.2/100} 94.2" stroke-dashoffset="23.55" stroke-linecap="round"/>
+        </svg>
+        <div class="prog-day-meals" style="color:${color}">${done}/${total}</div>
+      </div>`;
+  });
+
+  const adherence = totalMeals ? Math.round(totalMealsChecked/totalMeals*100) : 0;
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card"><div class="stat-val">${adherence}%</div><div class="stat-label">Weekly Adherence</div></div>
+    <div class="stat-card"><div class="stat-val">${daysActive}</div><div class="stat-label">Active Days</div></div>
+    <div class="stat-card"><div class="stat-val">${totalMealsChecked}</div><div class="stat-label">Meals Checked</div></div>
+    <div class="stat-card"><div class="stat-val">${totalMeals-totalMealsChecked}</div><div class="stat-label">Meals Remaining</div></div>
+  `;
+
+  let avgCals=0, avgP=0, avgC=0, avgF=0;
+  DAYS.forEach((day,i) => day.meals.forEach((slot,mi) => {
+    if (state.checked[`${i}_${mi}`]) {
+      const m = getActiveMeal(i, mi);
+      avgCals+=m.cal; avgP+=m.p; avgC+=m.c; avgF+=m.f;
+    }
+  }));
+
+  document.getElementById('macroAvgCards').innerHTML = `
+    <div class="macro-summary">
+      <div class="macro-bars">
+        <div class="macro-row"><div class="macro-label">Calories</div><div class="macro-bar-wrap"><div class="macro-bar-fill" style="width:${Math.min(100,avgCals/(2600*7)*100)}%;background:var(--gold)"></div></div><div class="macro-val">${avgCals} kcal</div></div>
+        <div class="macro-row"><div class="macro-label">Protein</div><div class="macro-bar-wrap"><div class="macro-bar-fill" style="width:${Math.min(100,avgP/(180*7)*100)}%;background:var(--blue)"></div></div><div class="macro-val">${avgP}g</div></div>
+        <div class="macro-row"><div class="macro-label">Carbs</div><div class="macro-bar-wrap"><div class="macro-bar-fill" style="width:${Math.min(100,avgC/(240*7)*100)}%;background:var(--gold2)"></div></div><div class="macro-val">${avgC}g</div></div>
+        <div class="macro-row"><div class="macro-label">Fat</div><div class="macro-bar-wrap"><div class="macro-bar-fill" style="width:${Math.min(100,avgF/(95*7)*100)}%;background:var(--red)"></div></div><div class="macro-val">${avgF}g</div></div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px">Totals from all checked meals this week</div>
+    <button class="reset-btn" onclick="openModal()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4"/></svg>
+      Reset Week
+    </button>
+  `;
+}
+
+// ── RESET MODAL ──
+function openModal() { document.getElementById('resetModal').classList.add('open'); }
+function closeModal() { document.getElementById('resetModal').classList.remove('open'); }
+function confirmReset() {
+  state.checked = {}; state.swaps = {};
+  save(); closeModal();
+  renderDayTabs(); renderMeals(); updateStreak(); renderProgress();
+}
+document.getElementById('resetModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ── INIT ──
+renderDayTabs();
+renderMeals();
+renderShop();
+renderSupps();
+updateStreak();
+</script>
+</body>
+</html>
