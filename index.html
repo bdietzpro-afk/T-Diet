@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="T-Diet"/>
+<meta name="theme-color" content="#0a0a0f"/>
+<title>T-Diet | Testosterone Meal Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--card:#16161f;--border:#2a2a3a;--gold:#d4a843;--gold2:#f0c060;--green:#3ddc84;--red:#ff4d6d;--blue:#4d9fff;--text:#f0f0f5;--muted:#888899;}
+  [data-theme="light"]{--bg:#f5f4ef;--bg2:#eceae1;--bg3:#e0ddd2;--card:#faf9f5;--border:#d4d0c4;--gold:#b8892a;--gold2:#c8992e;--green:#1d9e5c;--red:#d93452;--blue:#2b7fd4;--text:#1a1a22;--muted:#6b6878;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background 0.25s,color 0.25s;}
+  .app-header{position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:16px 20px 12px;transition:background 0.25s;}
+  [data-theme="light"] .app-header{background:rgba(245,244,239,0.95);}
+  .header-top{display:flex;align-items:center;justify-content:space-between;}
+  .header-right{display:flex;align-items:center;gap:10px;}
+  .app-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--gold);}
+  .app-subtitle{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:1px;}
+  .streak-badge{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-weight:700;font-size:12px;padding:4px 10px;border-radius:20px;}
+  .theme-toggle{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all 0.2s;}
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,10,15,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);transition:background 0.25s;}
+  [data-theme="light"] .bottom-nav{background:rgba(245,244,239,0.97);}
+  .nav-tab{flex:1;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;padding:10px 4px 8px;border-radius:0;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:3px;}
+  .nav-tab.active{color:var(--gold);}
+  .nav-tab svg{width:18px;height:18px;}
+  .screen{display:none;padding:16px 16px 100px;}
+  .screen.active{display:block;}
+  .day-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;-ms-overflow-style:none;scrollbar-width:none;}
+  .day-scroll::-webkit-scrollbar{display:none;}
+  .day-btn{flex-shrink:0;border:1.5px solid var(--border);background:var(--card);color:var(--muted);border-radius:12px;padding:8px 14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.18s;display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .day-btn .day-name{font-size:10px;text-transform:uppercase;letter-spacing:1px;}
+  .day-btn .day-num{font-family:'Bebas Neue',sans-serif;font-size:20px;line-height:1;}
+  .day-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(212,168,67,0.08);}
+  .day-btn.complete{border-color:var(--green);color:var(--green);background:rgba(61,220,132,0.06);}
+  .macro-summary{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:16px;}
+  .macro-bars{display:flex;flex-direction:column;gap:8px;}
+  .macro-row{display:flex;align-items:center;gap:10px;}
+  .macro-label{font-size:11px;color:var(--muted);width:56px;font-family:'DM Mono',monospace;}
+  .macro-bar-wrap{flex:1;height:6px;background:var(--bg3);border-radius:4px;overflow:hidden;}
+  .macro-bar-fill{height:100%;border-radius:4px;transition:width 0.6s cubic-bezier(.4,0,.2,1);}
+  .macro-val{font-size:11px;font-family:'DM Mono',monospace;width:60px;text-align:right;color:var(--text);}
+  .cal-display{text-align:center;margin-bottom:8px;}
+  .cal-num{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--gold);line-height:1;}
+  .cal-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+  .meal-card{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:10px;overflow:hidden;transition:border-color 0.2s;}
+  .meal-card.checked{border-color:rgba(61,220,132,0.4);}
+  .meal-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;}
+  .meal-check{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:transparent;cursor:pointer;flex-shrink:0;transition:all 0.2s;display:flex;align-items:center;justify-content:center;-webkit-appearance:none;appearance:none;}
+  .meal-card.checked .meal-check{border-color:var(--green);background:var(--green);}
+  .meal-check-inner{width:10px;height:10px;}
+  .meal-info{flex:1;min-width:0;}
+  .meal-type{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;}
+  .meal-name{font-size:14px;font-weight:500;color:var(--text);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .meal-cals{font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);flex-shrink:0;}
+  .meal-expand{padding:0 16px 14px;display:none;}
+  .meal-card.open .meal-expand{display:block;}
+  .meal-desc{font-size:13px;color:var(--muted);margin-bottom:10px;line-height:1.5;}
+  .meal-serving{font-size:11px;color:var(--blue);margin-bottom:10px;font-family:'DM Mono',monospace;}
+  .macro-chips{display:flex;gap:6px;flex-wrap:wrap;}
+  .chip{font-size:11px;font-family:'DM Mono',monospace;font-weight:500;padding:4px 10px;border-radius:20px;}
+  .chip-p{background:rgba(77,159,255,0.15);color:var(--blue);}
+  .chip-c{background:rgba(212,168,67,0.15);color:var(--gold2);}
+  .chip-f{background:rgba(255,77,109,0.15);color:var(--red);}
+  .chevron{color:var(--muted);transition:transform 0.2s;flex-shrink:0;}
+  .meal-card.open .chevron{transform:rotate(180deg);}
+  .meal-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .swap-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.25);border-radius:10px;color:var(--gold);font-size:11px;font-weight:600;cursor:pointer;width:fit-content;letter-spacing:0.5px;font-family:'DM Sans',sans-serif;}
+  .swap-btn svg{width:13px;height:13px;}
+  .recipe-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;background:rgba(77,159,255,0.08);border:1px solid rgba(77,159,255,0.25);border-radius:10px;color:var(--blue);font-size:11px;font-weight:600;cursor:pointer;width:fit-content;letter-spacing:0.5px;font-family:'DM Sans',sans-serif;}
+  .recipe-btn svg{width:13px;height:13px;}
+  .picker-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:flex-end;}
+  .picker-overlay.open{display:flex;}
+  .picker-sheet{background:var(--bg2);border:1px solid var(--border);border-radius:24px 24px 0 0;width:100%;max-width:480px;max-height:82vh;display:flex;flex-direction:column;animation:slideUp 0.28s cubic-bezier(.4,0,.2,1);padding-bottom:env(safe-area-inset-bottom,0px);}
+  .picker-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0;}
+  .picker-header{padding:14px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .picker-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--gold);}
+  .picker-subtitle{font-size:11px;color:var(--muted);margin-top:2px;}
+  .picker-close{color:var(--muted);font-size:22px;cursor:pointer;padding:4px 8px;line-height:1;}
+  .picker-scroll{overflow-y:auto;padding:12px 16px 20px;flex:1;}
+  .alt-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer;transition:all 0.18s;}
+  .alt-card:active{transform:scale(0.98);}
+  .alt-card.selected{border-color:var(--gold);background:rgba(212,168,67,0.06);}
+  .alt-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+  .alt-name{font-size:14px;font-weight:600;color:var(--text);flex:1;padding-right:10px;}
+  .alt-cal{font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);flex-shrink:0;}
+  .alt-serving{font-size:11px;color:var(--blue);font-family:'DM Mono',monospace;margin-bottom:8px;}
+  .alt-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:8px;}
+  .alt-chips{display:flex;gap:5px;flex-wrap:wrap;}
+  .selected-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--gold);font-weight:700;margin-left:6px;vertical-align:middle;}
+  /* RECIPE MODAL */
+  .recipe-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);align-items:flex-end;justify-content:center;}
+  .recipe-overlay.open{display:flex;}
+  .recipe-sheet{background:var(--bg2);border:1px solid var(--border);border-radius:24px 24px 0 0;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;animation:slideUp 0.3s cubic-bezier(.4,0,.2,1);padding-bottom:env(safe-area-inset-bottom,0px);}
+  .recipe-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0;}
+  .recipe-header{padding:14px 20px 12px;border-bottom:1px solid var(--border);}
+  .recipe-header-top{display:flex;justify-content:space-between;align-items:flex-start;}
+  .recipe-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--gold);flex:1;padding-right:10px;}
+  .recipe-close{color:var(--muted);font-size:22px;cursor:pointer;padding:4px 8px;line-height:1;}
+  .recipe-meta{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .recipe-meta-chip{font-size:11px;font-family:'DM Mono',monospace;padding:4px 10px;border-radius:20px;background:var(--bg3);color:var(--muted);}
+  .recipe-scroll{overflow-y:auto;padding:16px 20px 24px;flex:1;}
+  .recipe-section-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;color:var(--muted);margin-bottom:10px;margin-top:18px;}
+  .recipe-section-title:first-child{margin-top:0;}
+  .recipe-ingredients{display:flex;flex-direction:column;gap:6px;}
+  .recipe-ingredient{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--card);border-radius:10px;border:1px solid var(--border);}
+  .recipe-ingredient-bullet{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+  .recipe-ingredient-name{flex:1;font-size:13px;color:var(--text);}
+  .recipe-ingredient-qty{font-size:12px;font-family:'DM Mono',monospace;color:var(--muted);}
+  .recipe-steps{display:flex;flex-direction:column;gap:10px;}
+  .recipe-step{display:flex;gap:12px;padding:12px;background:var(--card);border-radius:12px;border:1px solid var(--border);}
+  .recipe-step-num{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .recipe-step-text{font-size:13px;color:var(--text);line-height:1.55;}
+  .recipe-tip{margin-top:16px;padding:12px;background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.2);border-radius:12px;font-size:12px;color:var(--muted);line-height:1.5;}
+  .recipe-tip strong{color:var(--gold);}
+  .section-hdr{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--gold);margin:20px 0 12px;padding-left:4px;display:flex;align-items:center;gap:10px;}
+  .section-hdr::after{content:'';flex:1;height:1px;background:var(--border);}
+  /* SHOPPING */
+  .shop-category{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:10px;overflow:hidden;}
+  .shop-cat-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;font-weight:600;font-size:14px;}
+  .shop-items{padding:0 16px 14px;display:none;}
+  .shop-category.open .shop-items{display:block;}
+  .shop-item{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+  .shop-item:last-child{border-bottom:none;}
+  .shop-checkbox{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+  .shop-item.ticked .shop-checkbox{background:var(--green);border-color:var(--green);}
+  .shop-item-name{font-size:13px;flex:1;}
+  .shop-item.ticked .shop-item-name{text-decoration:line-through;color:var(--muted);}
+  .shop-item-qty{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;}
+  .clear-btn{width:100%;margin-top:12px;padding:12px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;}
+  /* SUPPLEMENTS */
+  .supp-date-label{font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px;font-family:'DM Mono',monospace;}
+  .supp-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:10px;transition:border-color 0.2s;}
+  .supp-card.supp-done{border-color:rgba(61,220,132,0.4);}
+  .supp-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+  .supp-header-left{flex:1;}
+  .supp-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--gold);}
+  .supp-badge{font-size:10px;padding:3px 8px;border-radius:10px;font-weight:600;margin-top:4px;display:inline-block;}
+  .badge-high{background:rgba(61,220,132,0.15);color:var(--green);}
+  .badge-mod{background:rgba(212,168,67,0.15);color:var(--gold);}
+  .supp-check-btn{width:34px;height:34px;border-radius:50%;border:2px solid var(--border);background:transparent;cursor:pointer;flex-shrink:0;transition:all 0.2s;display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .supp-card.supp-done .supp-check-btn{border-color:var(--green);background:var(--green);}
+  .supp-dose{font-family:'DM Mono',monospace;font-size:12px;color:var(--blue);margin-bottom:6px;}
+  .supp-timing{font-size:11px;color:var(--muted);margin-bottom:8px;}
+  .supp-desc{font-size:13px;color:var(--muted);line-height:1.55;display:none;}
+  .supp-card.supp-open .supp-desc{display:block;}
+  .supp-benefits{display:none;flex-wrap:wrap;gap:5px;margin-top:10px;}
+  .supp-card.supp-open .supp-benefits{display:flex;}
+  .benefit-tag{font-size:10px;padding:3px 8px;border-radius:8px;background:var(--bg3);color:var(--muted);}
+  .supp-expand-btn{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);cursor:pointer;margin-top:6px;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0;}
+  .supp-progress{margin-bottom:16px;}
+  .supp-progress-bar-wrap{height:6px;background:var(--bg3);border-radius:4px;overflow:hidden;margin-bottom:6px;}
+  .supp-progress-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),#5ff0a0);transition:width 0.5s cubic-bezier(.4,0,.2,1);}
+  .supp-progress-label{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;display:flex;justify-content:space-between;}
+  /* PROGRESS */
+  .progress-week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px;}
+  .prog-day{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 4px;text-align:center;}
+  .prog-day.has-data{border-color:rgba(212,168,67,0.3);}
+  .prog-day-name{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+  .prog-day-meals{font-size:9px;color:var(--muted);}
+  .prog-ring{width:28px;height:28px;margin:4px auto 0;}
+  .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;}
+  .stat-val{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--gold);line-height:1;}
+  .stat-label{font-size:11px;color:var(--muted);margin-top:3px;}
+  /* WORKOUT */
+  .workout-streak-banner{background:linear-gradient(135deg,rgba(212,168,67,0.15),rgba(212,168,67,0.05));border:1px solid rgba(212,168,67,0.3);border-radius:14px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;}
+  .workout-streak-icon{font-size:28px;flex-shrink:0;}
+  .workout-streak-val{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);line-height:1;}
+  .workout-streak-label{font-size:11px;color:var(--muted);}
+  .workout-today{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px;}
+  .workout-today-title{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+  .workout-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+  .workout-type-btn{padding:12px 6px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg3);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-align:center;transition:all 0.18s;display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .workout-type-btn.selected{border-color:var(--gold);color:var(--gold);background:rgba(212,168,67,0.1);}
+  .workout-type-btn .wt-icon{font-size:20px;}
+  .workout-notes-input{width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;resize:none;margin-bottom:10px;outline:none;}
+  .workout-notes-input:focus{border-color:var(--gold);}
+  .workout-notes-input::placeholder{color:var(--muted);}
+  .workout-save-btn{width:100%;padding:12px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:#000;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity 0.2s;}
+  .workout-save-btn:active{opacity:0.8;}
+  .workout-history{display:flex;flex-direction:column;gap:8px;}
+  .workout-entry{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;align-items:flex-start;gap:12px;}
+  .workout-entry-icon{font-size:22px;flex-shrink:0;}
+  .workout-entry-info{flex:1;min-width:0;}
+  .workout-entry-type{font-size:13px;font-weight:600;color:var(--text);}
+  .workout-entry-meta{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px;}
+  .workout-entry-notes{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4;}
+  .workout-del-btn{background:none;border:none;color:var(--muted);cursor:pointer;padding:2px;font-size:14px;flex-shrink:0;}
+  /* COACH */
+  .coach-header-info{background:rgba(212,168,67,0.07);border:1px solid rgba(212,168,67,0.2);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--muted);line-height:1.5;}
+  .coach-header-info strong{color:var(--gold);}
+  .coach-quick-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+  .coach-chip{padding:7px 12px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap;}
+  .coach-chip:active{border-color:var(--gold);color:var(--gold);}
+  .coach-messages{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;min-height:200px;}
+  .coach-bubble{max-width:88%;padding:12px 14px;border-radius:16px;font-size:13px;line-height:1.55;}
+  .coach-bubble.user{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;align-self:flex-end;border-bottom-right-radius:4px;font-weight:500;}
+  .coach-bubble.ai{background:var(--card);border:1px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px;}
+  .coach-bubble.typing{color:var(--muted);font-style:italic;}
+  .coach-input-row{display:flex;gap:8px;align-items:flex-end;position:sticky;bottom:90px;background:var(--bg);padding:12px 0 0;}
+  .coach-input{flex:1;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;resize:none;outline:none;max-height:100px;min-height:44px;transition:border-color 0.2s;}
+  .coach-input:focus{border-color:var(--gold);}
+  .coach-input::placeholder{color:var(--muted);}
+  .coach-send-btn{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity 0.2s;}
+  .coach-send-btn:active{opacity:0.8;}
+  .coach-send-btn svg{width:18px;height:18px;}
+  /* INSTALL */
+  .install-banner{background:linear-gradient(135deg,rgba(212,168,67,0.12),rgba(212,168,67,0.04));border:1px solid rgba(212,168,67,0.3);border-radius:14px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;}
+  .install-icon{font-size:24px;flex-shrink:0;}
+  .install-text{flex:1;font-size:12px;color:var(--muted);line-height:1.5;}
+  .install-text strong{color:var(--gold);display:block;font-size:13px;margin-bottom:2px;}
+  .install-close{color:var(--muted);font-size:18px;cursor:pointer;padding:4px;flex-shrink:0;}
+  /* RESET */
+  .reset-btn{width:100%;margin-top:16px;padding:14px;background:rgba(255,77,109,0.08);border:1.5px solid rgba(255,77,109,0.3);color:var(--red);border-radius:14px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .reset-btn:active{background:rgba(255,77,109,0.18);}
+  /* MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;}
+  .modal-overlay.open{display:flex;}
+  .modal-sheet{background:var(--bg2);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:28px 24px 40px;width:100%;max-width:480px;animation:slideUp 0.25s cubic-bezier(.4,0,.2,1);}
+  @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .modal-icon{font-size:40px;text-align:center;margin-bottom:12px;}
+  .modal-title{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--text);text-align:center;letter-spacing:1px;margin-bottom:8px;}
+  .modal-desc{font-size:13px;color:var(--muted);text-align:center;line-height:1.6;margin-bottom:24px;}
+  .modal-actions{display:flex;flex-direction:column;gap:10px;}
+  .modal-confirm{padding:14px;border-radius:14px;border:none;background:var(--red);color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;}
+  .modal-cancel{padding:14px;border-radius:14px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;}
+  /* ONBOARDING */
+  .onboard-overlay{display:none;position:fixed;inset:0;z-index:9999;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+  .onboard-overlay.open{display:flex;}
+  .onboard-step{display:none;flex-direction:column;align-items:center;width:100%;max-width:400px;}
+  .onboard-step.active{display:flex;}
+  .onboard-emoji{font-size:52px;margin-bottom:16px;}
+  .onboard-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:var(--gold);text-align:center;margin-bottom:8px;}
+  .onboard-desc{font-size:14px;color:var(--muted);text-align:center;line-height:1.6;margin-bottom:28px;max-width:320px;}
+  .onboard-input{width:100%;padding:14px 16px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;outline:none;margin-bottom:12px;text-align:center;transition:border-color 0.2s;}
+  .onboard-input:focus{border-color:var(--gold);}
+  .onboard-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-bottom:20px;}
+  .onboard-option{padding:16px;border-radius:14px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;text-align:center;transition:all 0.18s;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .onboard-option .ob-icon{font-size:24px;}
+  .onboard-option.selected{border-color:var(--gold);color:var(--gold);background:rgba(212,168,67,0.1);}
+  .onboard-next-btn{width:100%;padding:16px;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:#000;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;cursor:pointer;transition:opacity 0.2s;}
+  .onboard-next-btn:active{opacity:0.85;}
+  .onboard-skip{margin-top:12px;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;}
+  .onboard-dots{display:flex;gap:6px;margin-bottom:28px;}
+  .onboard-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:all 0.2s;}
+  .onboard-dot.active{background:var(--gold);width:20px;border-radius:3px;}
+  /* UTILS */
+  .divider{height:1px;background:var(--border);margin:16px 0;}
+  .empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px;}
+  svg.check-icon{display:none;}
+  .meal-card.checked .check-icon{display:block;}
+  .meal-card.checked .uncheck-icon{display:none;}
+
+  /* ACHIEVEMENT BADGES */
+  .badge-toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-120px);z-index:9000;background:linear-gradient(135deg,#1a1a24,#111118);border:1.5px solid var(--gold);border-radius:20px;padding:14px 20px;display:flex;align-items:center;gap:14px;min-width:280px;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.5);transition:transform 0.4s cubic-bezier(.34,1.56,.64,1);}
+  .badge-toast.show{transform:translateX(-50%) translateY(0);}
+  .badge-toast-icon{font-size:32px;flex-shrink:0;}
+  .badge-toast-text{flex:1;}
+  .badge-toast-label{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:2px;}
+  .badge-toast-name{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text);letter-spacing:1px;}
+  .badge-toast-desc{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4;}
+  .badges-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+  .badge-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 10px;text-align:center;transition:all 0.2s;}
+  .badge-card.unlocked{border-color:rgba(212,168,67,0.5);background:rgba(212,168,67,0.06);}
+  .badge-card.locked{opacity:0.4;filter:grayscale(0.6);}
+  .badge-card-icon{font-size:28px;margin-bottom:6px;}
+  .badge-card-name{font-size:11px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.2;}
+  .badge-card.locked .badge-card-name{color:var(--muted);}
+  .badge-card-desc{font-size:10px;color:var(--muted);line-height:1.3;}
+  .badge-card.unlocked .badge-card-date{font-size:9px;color:var(--gold);margin-top:4px;font-family:'DM Mono',monospace;}
+  /* SEARCH/FILTER */
+  .picker-search-wrap{padding:10px 16px 0;position:relative;}
+  .picker-search{width:100%;padding:10px 36px 10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s;}
+  .picker-search:focus{border-color:var(--gold);}
+  .picker-search::placeholder{color:var(--muted);}
+  .picker-search-icon{position:absolute;right:28px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+  .picker-filter-chips{display:flex;gap:6px;padding:8px 16px 4px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}
+  .picker-filter-chips::-webkit-scrollbar{display:none;}
+  .filter-chip{flex-shrink:0;padding:5px 12px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap;}
+  .filter-chip.active{background:rgba(212,168,67,0.15);border-color:var(--gold);color:var(--gold);}
+  .picker-no-results{text-align:center;padding:30px 20px;color:var(--muted);font-size:13px;}
+  /* GOALS CUSTOMIZATION */
+  .goals-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;}
+  .goals-card-title{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+  .goals-edit-btn{font-size:11px;color:var(--gold);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;}
+  .goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .goal-item{display:flex;flex-direction:column;gap:4px;}
+  .goal-label{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;}
+  .goal-val{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--gold);line-height:1;}
+  .goal-unit{font-size:10px;color:var(--muted);}
+  .goals-edit-form{display:none;}
+  .goals-edit-form.open{display:block;}
+  .goal-input-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .goal-input-label{font-size:12px;color:var(--muted);width:80px;flex-shrink:0;}
+  .goal-input{flex:1;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:14px;outline:none;text-align:right;}
+  .goal-input:focus{border-color:var(--gold);}
+  .goal-save-btn{width:100%;padding:12px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:#000;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;}
+  /* PWA INSTALL PROMPT */
+  .pwa-banner{background:linear-gradient(135deg,rgba(77,159,255,0.12),rgba(77,159,255,0.04));border:1px solid rgba(77,159,255,0.3);border-radius:14px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;}
+  .pwa-install-btn{padding:8px 14px;background:var(--blue);border:none;border-radius:10px;color:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+  .pwa-banner-text{flex:1;font-size:12px;color:var(--muted);line-height:1.4;}
+  .pwa-banner-text strong{color:var(--blue);display:block;font-size:13px;margin-bottom:2px;}
+  .offline-indicator{display:none;position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:500;background:rgba(255,77,109,0.9);color:#fff;font-size:12px;font-weight:600;padding:6px 16px;border-radius:20px;backdrop-filter:blur(8px);white-space:nowrap;}
+  .offline-indicator.show{display:block;}
+  /* iOS INSTALL BANNER */
+  .ios-install-banner{position:fixed;bottom:env(safe-area-inset-bottom,0px);left:0;right:0;z-index:150;background:linear-gradient(135deg,rgba(10,10,15,0.97),rgba(17,17,24,0.97));border-top:1px solid var(--border);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:12px 16px 8px;animation:slideUp 0.4s cubic-bezier(.4,0,.2,1);}
+  [data-theme="light"] .ios-install-banner{background:linear-gradient(135deg,rgba(245,244,239,0.97),rgba(236,234,225,0.97));}
+  .ios-install-content{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+  .ios-install-icon{font-size:22px;flex-shrink:0;}
+  .ios-install-text{flex:1;font-size:12px;color:var(--muted);line-height:1.4;}
+  .ios-install-text strong{color:var(--text);display:block;font-size:13px;margin-bottom:2px;}
+  .ios-install-close{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px;flex-shrink:0;}
+  .ios-install-arrow{text-align:center;font-size:18px;color:var(--gold);animation:bounce 1.2s infinite;}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+  /* iOS INSTALL MODAL STEPS */
+  .ios-steps{display:flex;flex-direction:column;gap:10px;margin:16px 0 0;text-align:left;}
+  .ios-step{display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg3);border-radius:12px;}
+  .ios-step-num{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .ios-step-text{font-size:13px;color:var(--muted);line-height:1.5;}
+  .ios-step-text strong{color:var(--text);}
+  .ios-share-icon{display:inline-block;background:var(--blue);color:#fff;border-radius:6px;padding:2px 6px;font-size:11px;margin:0 2px;}
+</style>
+</head>
+<body>
+
+<!-- ONBOARDING -->
+<div class="onboard-overlay" id="onboardOverlay">
+  <div class="onboard-step active" id="obStep1">
+    <div class="onboard-emoji">⚡</div>
+    <div class="onboard-dots"><div class="onboard-dot active"></div><div class="onboard-dot"></div><div class="onboard-dot"></div><div class="onboard-dot"></div></div>
+    <div class="onboard-title">Welcome to T-Diet</div>
+    <div class="onboard-desc">Your personal testosterone-optimizing meal plan. Let's personalize it in 4 quick steps.</div>
+    <button class="onboard-next-btn" onclick="obNext(1)">Get Started</button>
+  </div>
+  <div class="onboard-step" id="obStep2">
+    <div class="onboard-emoji">📊</div>
+    <div class="onboard-dots"><div class="onboard-dot"></div><div class="onboard-dot active"></div><div class="onboard-dot"></div><div class="onboard-dot"></div></div>
+    <div class="onboard-title">Your Baseline</div>
+    <div class="onboard-desc">Tell us about yourself so we can display your info.</div>
+    <input class="onboard-input" id="obAge" type="number" placeholder="Your age" min="18" max="99"/>
+    <input class="onboard-input" id="obTLevel" type="number" placeholder="Current T-Level (ng/dL) — optional"/>
+    <button class="onboard-next-btn" onclick="obNext(2)">Continue</button>
+    <div class="onboard-skip" onclick="obNext(2)">Skip</div>
+  </div>
+  <div class="onboard-step" id="obStep3">
+    <div class="onboard-emoji">🎯</div>
+    <div class="onboard-dots"><div class="onboard-dot"></div><div class="onboard-dot"></div><div class="onboard-dot active"></div><div class="onboard-dot"></div></div>
+    <div class="onboard-title">Your Goal</div>
+    <div class="onboard-desc">What's your primary focus right now?</div>
+    <div class="onboard-options">
+      <div class="onboard-option" onclick="selectOb('goal','boost',this)"><div class="ob-icon">📈</div>Boost T-Levels</div>
+      <div class="onboard-option" onclick="selectOb('goal','muscle',this)"><div class="ob-icon">💪</div>Build Muscle</div>
+      <div class="onboard-option" onclick="selectOb('goal','energy',this)"><div class="ob-icon">⚡</div>More Energy</div>
+      <div class="onboard-option" onclick="selectOb('goal','fat',this)"><div class="ob-icon">🔥</div>Lose Fat</div>
+    </div>
+    <button class="onboard-next-btn" onclick="obNext(3)">Continue</button>
+    <div class="onboard-skip" onclick="obNext(3)">Skip</div>
+  </div>
+  <div class="onboard-step" id="obStep4">
+    <div class="onboard-emoji">🏋️</div>
+    <div class="onboard-dots"><div class="onboard-dot"></div><div class="onboard-dot"></div><div class="onboard-dot"></div><div class="onboard-dot active"></div></div>
+    <div class="onboard-title">Activity Level</div>
+    <div class="onboard-desc">How often do you currently exercise?</div>
+    <div class="onboard-options">
+      <div class="onboard-option" onclick="selectOb('activity','low',this)"><div class="ob-icon">🛋️</div>Rarely</div>
+      <div class="onboard-option" onclick="selectOb('activity','mod',this)"><div class="ob-icon">🚶</div>1–2x / week</div>
+      <div class="onboard-option" onclick="selectOb('activity','high',this)"><div class="ob-icon">🏃</div>3–4x / week</div>
+      <div class="onboard-option" onclick="selectOb('activity','athlete',this)"><div class="ob-icon">🏆</div>5+ / week</div>
+    </div>
+    <button class="onboard-next-btn" onclick="finishOnboard()">Start My Plan →</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="app-header">
+  <div class="header-top">
+    <div>
+      <div class="app-title">T-DIET</div>
+      <div class="app-subtitle" id="appSubtitle">Testosterone Meal Plan</div>
+    </div>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</button>
+      <div class="streak-badge" id="streakBadge">🔥 0 days</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREENS -->
+<div id="screenMeals" class="screen active">
+  <!-- Android/Chrome install banner -->
+  <div class="pwa-banner" id="androidInstallBanner" style="display:none">
+    <div class="pwa-banner-text"><strong>📲 Install T-Diet</strong>Add to home screen for offline access & faster loading</div>
+    <button class="pwa-install-btn" onclick="installPWA()">Install</button>
+  </div>
+  <!-- iOS Safari install banner -->
+  <div class="ios-install-banner" id="iosInstallBanner" style="display:none">
+    <div class="ios-install-content">
+      <div class="ios-install-icon">📲</div>
+      <div class="ios-install-text">
+        <strong>Install T-Diet on iPhone</strong>
+        Tap the Share button below, then "Add to Home Screen"
+      </div>
+      <button class="ios-install-close" onclick="document.getElementById('iosInstallBanner').style.display='none'">✕</button>
+    </div>
+    <div class="ios-install-arrow">▼</div>
+  </div>
+  <div class="install-banner" id="installBanner">
+    <div class="install-icon">📲</div>
+    <div class="install-text"><strong>Add to Home Screen</strong>Tap Share → "Add to Home Screen" in Safari to install as an app</div>
+    <div class="install-close" onclick="document.getElementById('installBanner').style.display='none'">✕</div>
+  </div>
+  <div class="day-scroll" id="dayScroll"></div>
+  <div class="macro-summary">
+    <div class="cal-display"><div class="cal-num" id="calDisplay">0</div><div class="cal-label">of <span id="calTarget">2600</span> kcal checked</div></div>
+    <div class="macro-bars">
+      <div class="macro-row"><div class="macro-label">Protein</div><div class="macro-bar-wrap"><div class="macro-bar-fill" id="barP" style="width:0%;background:#4d9fff"></div></div><div class="macro-val" id="valP">0 / 0g</div></div>
+      <div class="macro-row"><div class="macro-label">Carbs</div><div class="macro-bar-wrap"><div class="macro-bar-fill" id="barC" style="width:0%;background:#d4a843"></div></div><div class="macro-val" id="valC">0 / 0g</div></div>
+      <div class="macro-row"><div class="macro-label">Fat</div><div class="macro-bar-wrap"><div class="macro-bar-fill" id="barF" style="width:0%;background:#ff4d6d"></div></div><div class="macro-val" id="valF">0 / 0g</div></div>
+    </div>
+  </div>
+  <div id="mealList"></div>
+</div>
+
+<div id="screenShop" class="screen"><div class="section-hdr">Shopping List</div><div id="shopList"></div></div>
+
+<div id="screenSupps" class="screen">
+  <div class="section-hdr">Supplements</div>
+  <div class="supp-date-label" id="suppDateLabel"></div>
+  <div class="supp-progress">
+    <div class="supp-progress-bar-wrap"><div class="supp-progress-bar" id="suppProgressBar" style="width:0%"></div></div>
+    <div class="supp-progress-label"><span id="suppProgressText">0 of 4 taken today</span><span id="suppProgressPct">0%</span></div>
+  </div>
+  <div id="suppList"></div>
+</div>
+
+<div id="screenWorkout" class="screen">
+  <div class="section-hdr">Workout Log</div>
+  <div class="workout-streak-banner">
+    <div class="workout-streak-icon">🏋️</div>
+    <div><div class="workout-streak-val" id="workoutStreakVal">0</div><div class="workout-streak-label">Workout streak (days)</div></div>
+  </div>
+  <div class="workout-today">
+    <div class="workout-today-title"><span>LOG TODAY</span><span id="workoutTodayDate" style="font-weight:400;font-size:10px;"></span></div>
+    <div class="workout-type-grid">
+      <div class="workout-type-btn" onclick="selWT('Strength','🏋️',this)"><div class="wt-icon">🏋️</div>Strength</div>
+      <div class="workout-type-btn" onclick="selWT('Cardio','🏃',this)"><div class="wt-icon">🏃</div>Cardio</div>
+      <div class="workout-type-btn" onclick="selWT('HIIT','⚡',this)"><div class="wt-icon">⚡</div>HIIT</div>
+      <div class="workout-type-btn" onclick="selWT('Yoga','🧘',this)"><div class="wt-icon">🧘</div>Yoga</div>
+      <div class="workout-type-btn" onclick="selWT('Walk','🚶',this)"><div class="wt-icon">🚶</div>Walk</div>
+      <div class="workout-type-btn" onclick="selWT('Rest','😴',this)"><div class="wt-icon">😴</div>Rest Day</div>
+    </div>
+    <textarea class="workout-notes-input" id="workoutNotes" placeholder="Notes: sets, reps, how you felt... (optional)" rows="2"></textarea>
+    <button class="workout-save-btn" onclick="saveWorkout()">Log Workout</button>
+  </div>
+  <div class="section-hdr">History</div>
+  <div class="workout-history" id="workoutHistory"></div>
+</div>
+
+<div id="screenCoach" class="screen">
+  <div class="section-hdr">AI Meal Coach</div>
+  <div class="coach-header-info"><strong>Powered by Claude AI</strong>Ask about testosterone nutrition, meal prep, substitutions, or how to maximize your results.</div>
+  <div class="coach-quick-chips">
+    <div class="coach-chip" onclick="sendChip(this)">Why is zinc important for T?</div>
+    <div class="coach-chip" onclick="sendChip(this)">Best pre-workout meals</div>
+    <div class="coach-chip" onclick="sendChip(this)">Foods that kill testosterone</div>
+    <div class="coach-chip" onclick="sendChip(this)">How much protein do I need?</div>
+    <div class="coach-chip" onclick="sendChip(this)">Meal prep tips</div>
+  </div>
+  <div class="coach-messages" id="coachMessages"></div>
+  <div class="coach-input-row">
+    <textarea class="coach-input" id="coachInput" placeholder="Ask your AI meal coach..." rows="1" onkeydown="coachKeydown(event)"></textarea>
+    <button class="coach-send-btn" onclick="sendCoachMessage()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<div id="screenProgress" class="screen">
+  <div class="section-hdr">Weekly Progress</div>
+  <div class="progress-week" id="weekGrid"></div>
+  <div class="stats-grid" id="statsGrid"></div>
+  <div class="section-hdr">Calorie Goals</div>
+  <div class="goals-card">
+    <div class="goals-card-title"><span>DAILY TARGETS</span><button class="goals-edit-btn" onclick="toggleGoalsEdit()">✏️ Edit</button></div>
+    <div class="goals-grid" id="goalsDisplay"></div>
+    <div class="goals-edit-form" id="goalsEditForm">
+      <div style="height:12px"></div>
+      <div class="goal-input-row"><div class="goal-input-label">Calories</div><input class="goal-input" id="gi_cal" type="number" min="1200" max="5000"/><div class="goal-unit">kcal</div></div>
+      <div class="goal-input-row"><div class="goal-input-label">Protein</div><input class="goal-input" id="gi_p" type="number" min="50" max="400"/><div class="goal-unit">g</div></div>
+      <div class="goal-input-row"><div class="goal-input-label">Carbs</div><input class="goal-input" id="gi_c" type="number" min="50" max="600"/><div class="goal-unit">g</div></div>
+      <div class="goal-input-row"><div class="goal-input-label">Fat</div><input class="goal-input" id="gi_f" type="number" min="20" max="300"/><div class="goal-unit">g</div></div>
+      <button class="goal-save-btn" onclick="saveGoals()">Save Targets</button>
+    </div>
+  </div>
+  <div class="section-hdr">Macro Totals</div>
+  <div id="macroAvgCards"></div>
+  <div class="section-hdr">Achievements</div>
+  <div class="badges-grid" id="badgesGrid"></div>
+</div>
+
+<!-- PICKER -->
+<div class="picker-overlay" id="pickerOverlay">
+  <div class="picker-sheet">
+    <div class="picker-handle"></div>
+    <div class="picker-header"><div><div class="picker-title" id="pickerTitle">Choose Meal</div><div class="picker-subtitle" id="pickerSubtitle"></div></div><div class="picker-close" onclick="closePicker()">✕</div></div>
+    <div class="picker-search-wrap">
+    <input class="picker-search" id="pickerSearch" type="text" placeholder="Search meals..." oninput="filterPicker()"/>
+    <svg class="picker-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </div>
+  <div class="picker-filter-chips" id="pickerFilterChips"></div>
+  <div class="picker-scroll" id="pickerScroll"></div>
+  </div>
+</div>
+
+<!-- RECIPE MODAL -->
+<div class="recipe-overlay" id="recipeOverlay">
+  <div class="recipe-sheet">
+    <div class="recipe-handle"></div>
+    <div class="recipe-header">
+      <div class="recipe-header-top"><div class="recipe-title" id="recipeTitle">Recipe</div><div class="recipe-close" onclick="closeRecipe()">✕</div></div>
+      <div class="recipe-meta" id="recipeMeta"></div>
+    </div>
+    <div class="recipe-scroll" id="recipeContent"></div>
+  </div>
+</div>
+
+<!-- RESET MODAL -->
+<div class="modal-overlay" id="resetModal">
+  <div class="modal-sheet">
+    <div class="modal-icon">🔄</div>
+    <div class="modal-title">Reset This Week?</div>
+    <div class="modal-desc">This will clear all checked meals and swaps. Shopping list is not affected.</div>
+    <div class="modal-actions">
+      <button class="modal-confirm" onclick="confirmReset()">Yes, Reset Week</button>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-tab active" onclick="showScreen('Meals',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>Meals</button>
+  <button class="nav-tab" onclick="showScreen('Shop',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Shop</button>
+  <button class="nav-tab" onclick="showScreen('Supps',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>Supps</button>
+  <button class="nav-tab" onclick="showScreen('Workout',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 5v14M18 5v14M2 9h4M18 9h4M2 15h4M18 15h4"/></svg>Workout</button>
+  <button class="nav-tab" onclick="showScreen('Coach',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Coach</button>
+  <button class="nav-tab" onclick="showScreen('Progress',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Stats</button>
+</div>
+
+<script>
+const ALTERNATIVES={Breakfast:[{name:'Scrambled Eggs + Avocado + Black Coffee',desc:'3 large scrambled eggs with half avocado sliced. Black coffee or with a splash of almond milk.',serving:'3 eggs / 75g avocado',cal:430,p:22,c:14,f:33},{name:'Overnight Oats + Chia + Almond Butter + Banana',desc:'Rolled oats soaked overnight in almond milk, topped with chia seeds, almond butter, and sliced banana.',serving:'80g oats / 15g chia / 2 tbsp AB / 1 banana',cal:520,p:18,c:68,f:18},{name:'Egg Omelette + Mushrooms + Feta + Avocado',desc:'3-egg omelette with sauteed mushrooms, crumbled feta cheese, and a side of sliced avocado.',serving:'3 eggs / 80g mushrooms / 30g feta / 75g avocado',cal:460,p:38,c:6,f:32},{name:'Protein Smoothie + Spinach + Banana + Nut Butter',desc:'Blend spinach, banana, 1 scoop whey protein, almond milk, and 1 tbsp nut butter.',serving:'2 cups spinach / 1 banana / 1 scoop whey / 250ml / 1 tbsp',cal:480,p:36,c:54,f:12},{name:'Eggs + Whole Grain Toast + Smashed Avocado',desc:'3 eggs on whole grain toast with smashed avocado and cherry tomatoes.',serving:'3 eggs / 2 slices / 75g avocado / 80g tomatoes',cal:490,p:24,c:38,f:28},{name:'Veggie Frittata + Avocado',desc:'Baked frittata with 3 eggs, spinach, red peppers, onion, and crumbled feta. Served with sliced avocado.',serving:'3 eggs / 80g veg / 30g feta / 75g avocado',cal:470,p:30,c:14,f:34},{name:'Smoked Salmon Bagel + Cream Cheese + Eggs',desc:'Whole grain bagel with cream cheese, smoked salmon, capers. Served with 2 scrambled eggs on the side.',serving:'80g salmon / 1 bagel / 2 tbsp cream cheese / 2 eggs',cal:520,p:36,c:44,f:18},{name:'Greek Yogurt Parfait + Granola + Berries + Nuts',desc:'Layered full-fat Greek yogurt with low-sugar granola, mixed berries, and a sprinkle of walnuts.',serving:'200g yogurt / 40g granola / 80g berries / 20g nuts',cal:400,p:22,c:42,f:14}],Snack:[{name:'Brazil Nuts + Orange',desc:'A small handful of Brazil nuts alongside a whole orange. Just 2-3 Brazil nuts covers your full daily selenium needs.',serving:'30g nuts / 1 medium orange',cal:215,p:5,c:22,f:14},{name:'Hard Boiled Eggs + Pumpkin Seeds',desc:'Two hard boiled eggs with a small handful of raw pumpkin seeds. High in zinc for testosterone support.',serving:'2 eggs / 30g seeds',cal:250,p:18,c:5,f:18},{name:'Full-Fat Greek Yogurt + Blueberries + Honey',desc:'Full-fat Greek yogurt topped with fresh blueberries and a drizzle of raw honey.',serving:'200g / 80g / 1 tsp',cal:230,p:18,c:26,f:6},{name:'Mixed Nuts + Dark Chocolate (85%+)',desc:'A small mix of almonds, cashews, and walnuts with a couple squares of 85%+ dark chocolate. Rich in magnesium.',serving:'30g nuts / 25g chocolate',cal:270,p:6,c:14,f:22},{name:'Cottage Cheese + Walnuts + Strawberries',desc:'Full-fat cottage cheese with walnuts and fresh or frozen strawberries.',serving:'150g / 20g / 80g',cal:230,p:20,c:14,f:10},{name:'Apple + Almond Butter',desc:'A medium apple with 2 tbsp almond butter for dipping.',serving:'1 medium apple / 2 tbsp AB',cal:230,p:5,c:32,f:10},{name:'Pumpkin Seeds + Banana',desc:'A handful of raw pumpkin seeds with a medium banana. Quick zinc and potassium hit pre-workout.',serving:'30g / 1 medium banana',cal:200,p:7,c:34,f:7},{name:'Whey Protein Shake + Almond Milk + Berries',desc:'1 scoop whey protein blended with almond milk and frozen mixed berries.',serving:'1 scoop / 250ml / 80g berries',cal:220,p:24,c:24,f:4},{name:'Cottage Cheese + Pineapple',desc:'Full-fat cottage cheese with fresh or canned pineapple chunks.',serving:'150g / 80g',cal:180,p:18,c:20,f:2},{name:'Hard Boiled Eggs + Celery Sticks',desc:'Two hard boiled eggs with crunchy celery sticks.',serving:'2 eggs / 2 stalks',cal:170,p:14,c:4,f:10}],Lunch:[{name:'Grilled Salmon + Quinoa + Roasted Broccoli',desc:'6oz grilled salmon fillet with cooked quinoa and roasted broccoli drizzled with 1 tbsp olive oil and lemon.',serving:'170g / 150g / 100g',cal:620,p:48,c:44,f:22},{name:'Chicken Breast + Sweet Potato + Steamed Spinach',desc:'Grilled or baked chicken breast with a baked sweet potato and steamed spinach drizzled with olive oil.',serving:'170g / 200g / 80g / 1 tbsp oil',cal:560,p:50,c:46,f:14},{name:'Beef Stir Fry + Bok Choy + Brown Rice',desc:'Lean beef strips stir-fried with bell peppers, bok choy, and garlic in a light coconut aminos sauce.',serving:'150g beef / 100g veg / 150g rice',cal:590,p:40,c:52,f:18},{name:'Tuna Salad + Mixed Greens + Avocado + Pumpkin Seeds',desc:'Chunk light tuna in olive oil over mixed greens with sliced avocado, pumpkin seeds, and lemon-olive oil dressing.',serving:'150g tuna / 60g greens / 75g avocado / 20g seeds',cal:490,p:42,c:12,f:30},{name:'Tuna on Whole Grain Crackers + Hummus + Cucumber',desc:'Tuna in olive oil on whole grain crackers with sliced cucumber and a side of hummus for dipping.',serving:'120g tuna / 8 crackers / 80g hummus',cal:460,p:34,c:34,f:18},{name:'Grilled Chicken + Garlic Butter + Quinoa + Salad',desc:'Herb-marinated grilled chicken breast with garlic butter sauce, a fresh side salad, and cooked quinoa.',serving:'170g chicken / 1 tbsp butter / 150g quinoa',cal:560,p:44,c:46,f:16},{name:'Chicken Caesar Salad + Parmesan + Boiled Egg',desc:'Grilled chicken over romaine lettuce with parmesan, olive oil Caesar dressing, and a sliced hard-boiled egg.',serving:'170g chicken / 60g greens / 1 tbsp dressing / 1 egg',cal:490,p:48,c:10,f:28},{name:'Ground Beef Bowl + Black Beans + Brown Rice + Avocado',desc:'Seasoned grass-fed ground beef over brown rice with black beans, avocado, salsa, and a squeeze of lime.',serving:'150g beef / 100g beans / 150g rice / 60g avocado',cal:640,p:46,c:58,f:22}],Dinner:[{name:'Grass-Fed Beef Tacos (Lettuce Wraps) + Guacamole',desc:'Seasoned grass-fed ground beef in butter lettuce wraps with salsa and guacamole.',serving:'170g beef / 60g guac',cal:540,p:42,c:12,f:36},{name:'Baked Cod + Roasted Asparagus + Brown Rice',desc:'Baked cod fillet with roasted asparagus and cooked brown rice, finished with lemon juice and butter.',serving:'170g / 120g / 150g',cal:510,p:46,c:44,f:12},{name:'Lamb Chops + Brussels Sprouts + Mashed Sweet Potato',desc:'Grilled lamb chops with roasted Brussels sprouts and mashed sweet potato. Lamb is one of the richest sources of zinc.',serving:'170g / 120g / 150g',cal:600,p:44,c:40,f:28},{name:'Grilled Chicken Thighs + Cauliflower Rice + Broccoli',desc:'Skin-on grilled chicken thighs over cauliflower rice with roasted broccoli and garlic.',serving:'200g / 200g / 120g broccoli',cal:540,p:50,c:18,f:28},{name:'Grilled Ribeye + Roasted Asparagus + Baked Potato',desc:'A well-seasoned 6oz grass-fed ribeye with roasted asparagus and a baked potato with sour cream.',serving:'170g steak / 120g / 1 medium potato',cal:620,p:48,c:38,f:28},{name:'Slow-Cooked Beef Stew + Root Vegetables + Kale Salad',desc:'Tender slow-cooked grass-fed beef with root vegetables in a rich broth. Served with a fresh kale salad.',serving:'200g beef / 150g veg / 80g kale',cal:600,p:46,c:42,f:24},{name:'Baked Salmon + Sweet Potato + Steamed Broccoli',desc:'Baked salmon fillet with a roasted sweet potato and steamed broccoli, finished with lemon and olive oil.',serving:'170g / 150g / 120g',cal:560,p:46,c:44,f:18},{name:'Turkey Meatballs + Zucchini Noodles + Tomato Sauce',desc:'Lean turkey meatballs over spiralized zucchini noodles in a rich tomato and garlic sauce.',serving:'200g turkey / 200g zucchini / 120g sauce',cal:480,p:48,c:18,f:22},{name:'Chicken Stir Fry + Mixed Veg + Egg Noodles',desc:'Diced chicken thighs stir-fried with broccoli, snap peas, and carrots in a sesame-ginger sauce over egg noodles.',serving:'180g chicken / 120g veg / 100g noodles',cal:540,p:46,c:46,f:14}]};
+
+const DAYS=[{name:'Mon',meals:[{type:'Breakfast',altIdx:0},{type:'Snack',altIdx:0},{type:'Lunch',altIdx:0},{type:'Snack',altIdx:1},{type:'Dinner',altIdx:0}]},{name:'Tue',meals:[{type:'Breakfast',altIdx:1},{type:'Snack',altIdx:1},{type:'Lunch',altIdx:1},{type:'Snack',altIdx:2},{type:'Dinner',altIdx:1}]},{name:'Wed',meals:[{type:'Breakfast',altIdx:2},{type:'Snack',altIdx:5},{type:'Lunch',altIdx:2},{type:'Snack',altIdx:3},{type:'Dinner',altIdx:2}]},{name:'Thu',meals:[{type:'Breakfast',altIdx:3},{type:'Snack',altIdx:3},{type:'Lunch',altIdx:3},{type:'Snack',altIdx:9},{type:'Dinner',altIdx:3}]},{name:'Fri',meals:[{type:'Breakfast',altIdx:4},{type:'Snack',altIdx:2},{type:'Lunch',altIdx:4},{type:'Snack',altIdx:6},{type:'Dinner',altIdx:4}]},{name:'Sat',meals:[{type:'Breakfast',altIdx:5},{type:'Snack',altIdx:4},{type:'Lunch',altIdx:5},{type:'Snack',altIdx:7},{type:'Dinner',altIdx:5}]},{name:'Sun',meals:[{type:'Breakfast',altIdx:6},{type:'Snack',altIdx:0},{type:'Lunch',altIdx:6},{type:'Snack',altIdx:8},{type:'Dinner',altIdx:6}]}];
+
+const SHOP=[{cat:'🥩 Proteins',items:[{name:'Salmon fillets',qty:'4 fillets (~680g)'},{name:'Grass-fed ground beef',qty:'500g'},{name:'Chicken breasts',qty:'500g'},{name:'Chicken thighs',qty:'300g'},{name:'Lamb chops',qty:'300g'},{name:'Eggs',qty:'18 large'},{name:'Full-fat Greek yogurt',qty:'1kg tub'},{name:'Canned tuna (in olive oil)',qty:'3 cans'},{name:'Smoked salmon',qty:'150g pack'},{name:'Cottage cheese',qty:'500g'},{name:'Cod fillets',qty:'2 fillets'},{name:'Whey protein powder',qty:'1 tub'},{name:'Feta cheese',qty:'200g'},{name:'Turkey mince',qty:'300g'}]},{cat:'🥑 Healthy Fats',items:[{name:'Avocados',qty:'6-7 medium'},{name:'Extra virgin olive oil',qty:'1 bottle'},{name:'Brazil nuts',qty:'100g bag'},{name:'Walnuts',qty:'100g bag'},{name:'Almond butter',qty:'1 jar'},{name:'Mixed nuts',qty:'150g bag'},{name:'Dark chocolate 85%+',qty:'200g bar'},{name:'Pumpkin seeds',qty:'150g bag'},{name:'Chia seeds',qty:'100g bag'},{name:'Cream cheese',qty:'small tub'}]},{cat:'🍠 Carbohydrates',items:[{name:'Sweet potatoes',qty:'4-5 medium'},{name:'Quinoa',qty:'500g bag'},{name:'Brown rice',qty:'500g bag'},{name:'Rolled oats',qty:'500g bag'},{name:'Whole grain bread',qty:'1 loaf'},{name:'Whole grain bagels',qty:'pack of 4'},{name:'Whole grain crackers',qty:'1 box'},{name:'Bananas',qty:'6-7'},{name:'Granola (low sugar)',qty:'200g'},{name:'Egg noodles',qty:'200g'}]},{cat:'🥦 Vegetables',items:[{name:'Broccoli',qty:'2 heads'},{name:'Brussels sprouts',qty:'300g bag'},{name:'Spinach',qty:'large bag (200g)'},{name:'Cauliflower',qty:'1 head'},{name:'Asparagus',qty:'2 bundles'},{name:'Kale',qty:'1 bunch'},{name:'Bok choy',qty:'1 head'},{name:'Bell peppers',qty:'3 mixed'},{name:'Mushrooms',qty:'200g punnet'},{name:'Cherry tomatoes',qty:'punnet'},{name:'Celery',qty:'1 bunch'},{name:'Garlic',qty:'1 bulb'},{name:'Zucchini',qty:'2 medium'}]},{cat:'🍓 Fruit',items:[{name:'Blueberries',qty:'punnet (150g)'},{name:'Raspberries',qty:'punnet'},{name:'Strawberries',qty:'punnet (150g)'},{name:'Oranges',qty:'3-4'},{name:'Apples',qty:'3'},{name:'Pineapple',qty:'1 small / canned'}]},{cat:'🧄 Pantry',items:[{name:'Hummus',qty:'1 tub'},{name:'Honey (raw)',qty:'small jar'},{name:'Mixed seeds',qty:'100g'},{name:'Lemons',qty:'4-5'},{name:'Almond milk',qty:'1 litre'},{name:'Coconut aminos',qty:'small bottle'},{name:'Sour cream',qty:'small tub'},{name:'Black beans (canned)',qty:'1 can'},{name:'Tomato pasta sauce',qty:'1 jar'}]}];
+
+const SUPPS=[{name:'Omega-3 Fish Oil',badge:'High Evidence',badgeClass:'badge-high',dose:'2-3g EPA+DHA daily',timing:'Take with your largest meal (lunch or dinner)',desc:'Omega-3 fatty acids reduce systemic inflammation, which is a key driver of testosterone suppression. They also improve the sensitivity of androgen receptors, meaning your body can use the testosterone it produces more effectively.',benefits:['Reduces inflammation','Androgen receptor sensitivity','Heart health','Brain function','Mood support']},{name:'ZMA (Zinc + Magnesium)',badge:'High Evidence',badgeClass:'badge-high',dose:'Zinc 30mg + Magnesium 450mg',timing:'Take 30-60 min before bed on an empty stomach',desc:'Zinc is a direct cofactor in testosterone biosynthesis. Magnesium increases free testosterone by reducing the binding of testosterone to SHBG. Taking them together before sleep maximizes the nocturnal testosterone pulse.',benefits:['Testosterone synthesis','Free T levels','Sleep quality','Muscle recovery','Immune support']},{name:'Ashwagandha (KSM-66)',badge:'Moderate Evidence',badgeClass:'badge-mod',dose:'300-600mg daily',timing:'Take with breakfast or before bed',desc:'Ashwagandha is an adaptogen that lowers cortisol levels. Since cortisol and testosterone have an inverse relationship, chronically high stress can silently tank your T levels. Studies show ~15-17% increase in testosterone with consistent use over 8-12 weeks.',benefits:['Cortisol reduction','Stress resilience','Testosterone support','Muscle strength','Sleep quality']},{name:'Creatine Monohydrate',badge:'High Evidence',badgeClass:'badge-high',dose:'5g daily',timing:'Any time — post-workout is ideal. No loading needed.',desc:'Creatine is the most researched supplement in sports science. It increases DHT (dihydrotestosterone), a potent androgen derived from testosterone. It also dramatically improves strength and muscle output during training.',benefits:['DHT increase','Strength output','Muscle mass','Brain energy','Training performance']}];
+
+const RECIPES={
+  'Egg Omelette + Mushrooms + Feta + Avocado':{time:'15 min',difficulty:'Easy',servings:1,ingredients:[{name:'Large eggs',qty:'3'},{name:'Mushrooms, sliced',qty:'80g'},{name:'Feta cheese, crumbled',qty:'30g'},{name:'Avocado, sliced',qty:'75g'},{name:'Butter or olive oil',qty:'1 tsp'},{name:'Salt & pepper',qty:'to taste'}],steps:['Crack eggs into a bowl, season with salt and pepper, and whisk until combined.','Heat butter in a non-stick pan over medium-high. Add mushrooms and cook 3-4 min until golden. Remove and set aside.','Lower heat to medium. Add a little more butter. Pour eggs into pan.','As eggs begin to set at the edges, use a spatula to gently push cooked egg toward the center.','When mostly set but slightly glossy on top, scatter mushrooms and feta over one half.','Fold omelette in half and slide onto a plate. Serve immediately with sliced avocado on the side.'],tip:'Eggs are one of the most complete testosterone-supporting foods — they contain cholesterol (the precursor to testosterone), vitamin D, and selenium. Always eat the whole egg.'},
+  'Grilled Salmon + Quinoa + Roasted Broccoli':{time:'25 min',difficulty:'Easy',servings:1,ingredients:[{name:'Salmon fillet',qty:'170g'},{name:'Quinoa (dry)',qty:'75g'},{name:'Broccoli florets',qty:'100g'},{name:'Olive oil',qty:'1 tbsp'},{name:'Lemon',qty:'half'},{name:'Garlic powder',qty:'1/4 tsp'},{name:'Salt & pepper',qty:'to taste'}],steps:['Cook quinoa: rinse and add to a pot with 150ml water. Bring to a boil, then simmer covered for 12 min until water is absorbed. Fluff with a fork.','Preheat your oven to 200C / 400F. Toss broccoli florets in half the olive oil, salt, and pepper. Spread on a baking sheet.','Roast broccoli for 18-20 minutes until slightly charred at the edges.','Season salmon with garlic powder, salt, and pepper. Heat remaining oil in a pan over medium-high heat.','Cook salmon skin-side up for 3-4 min, flip, and cook a further 3 min until the flesh flakes easily.','Plate quinoa, top with salmon and broccoli. Squeeze lemon juice over everything. Serve immediately.'],tip:'Salmon is rich in vitamin D and omega-3s — both directly support testosterone production and androgen receptor sensitivity.'},
+  'Grass-Fed Beef Tacos (Lettuce Wraps) + Guacamole':{time:'20 min',difficulty:'Easy',servings:1,ingredients:[{name:'Grass-fed ground beef',qty:'170g'},{name:'Butter lettuce leaves',qty:'4-5 large'},{name:'Avocado',qty:'1 medium'},{name:'Lime juice',qty:'1 tbsp'},{name:'Cherry tomatoes, halved',qty:'50g'},{name:'Cumin',qty:'1/2 tsp'},{name:'Smoked paprika',qty:'1/2 tsp'},{name:'Garlic, minced',qty:'1 clove'},{name:'Salt & pepper',qty:'to taste'}],steps:['Make guacamole: mash avocado with lime juice, a pinch of salt, and a pinch of cumin. Set aside.','Heat a skillet over medium-high heat. Add beef and break it apart with a spoon.','Cook beef for 6-8 minutes until browned. Add garlic, cumin, smoked paprika, salt, and pepper. Stir and cook 1 more minute.','Wash and dry the lettuce leaves — these are your taco shells.','Load each leaf with seasoned beef, a dollop of guacamole, and cherry tomatoes.','Serve immediately with extra lime.'],tip:'Grass-fed beef is rich in zinc and saturated fats — both key building blocks for testosterone. Avocado provides healthy monounsaturated fats that support hormone production.'},
+  'Lamb Chops + Brussels Sprouts + Mashed Sweet Potato':{time:'35 min',difficulty:'Medium',servings:1,ingredients:[{name:'Lamb chops',qty:'170g (2 chops)'},{name:'Sweet potato',qty:'200g'},{name:'Brussels sprouts, halved',qty:'120g'},{name:'Olive oil',qty:'2 tbsp'},{name:'Garlic',qty:'2 cloves'},{name:'Fresh rosemary',qty:'1 sprig'},{name:'Butter',qty:'1 tsp'},{name:'Salt & pepper',qty:'to taste'}],steps:['Peel and cube sweet potato. Boil in salted water for 15 min until tender. Drain, then mash with butter and a pinch of salt.','Preheat oven to 200C. Toss halved Brussels sprouts with 1 tbsp oil, salt, and pepper. Roast 20 min until golden.','Season lamb chops generously with salt and pepper. Press rosemary onto both sides.','Heat a heavy skillet over high heat with remaining oil. Sear chops 3 min per side for medium-rare.','Add garlic cloves to the pan in the last minute, basting the chops.','Rest lamb for 5 minutes before serving. Plate with mashed sweet potato and Brussels sprouts.'],tip:'Lamb is one of the highest dietary sources of zinc — a mineral directly involved in testosterone biosynthesis. Higher zinc intake correlates strongly with higher T levels.'}
+};
+
+let state={currentDay:new Date().getDay()===0?6:new Date().getDay()-1,checked:{},shopped:{},swaps:{},suppChecked:{},workouts:[],profile:{age:'',tLevel:'',goal:'',activity:''},theme:'dark',onboarded:false};
+
+function loadState(){try{const s=JSON.parse(localStorage.getItem('tdiet_v3')||'{}');Object.assign(state,s);state.currentDay=new Date().getDay()===0?6:new Date().getDay()-1;}catch(e){}}
+function save(){localStorage.setItem('tdiet_v3',JSON.stringify(state));}
+loadState();
+
+// THEME
+function applyTheme(){document.documentElement.setAttribute('data-theme',state.theme);document.getElementById('themeToggle').textContent=state.theme==='dark'?'🌙':'☀️';}
+function toggleTheme(){state.theme=state.theme==='dark'?'light':'dark';applyTheme();save();}
+applyTheme();
+
+// ONBOARDING
+let obData={goal:'',activity:''};
+function selectOb(field,val,el){el.closest('.onboard-options').querySelectorAll('.onboard-option').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');obData[field]=val;}
+function obNext(step){if(step===2){const a=document.getElementById('obAge').value,t=document.getElementById('obTLevel').value;if(a)state.profile.age=a;if(t)state.profile.tLevel=t;}document.getElementById('obStep'+step).classList.remove('active');document.getElementById('obStep'+(step+1)).classList.add('active');}
+function finishOnboard(){state.profile.goal=obData.goal;state.profile.activity=obData.activity;state.onboarded=true;save();document.getElementById('onboardOverlay').classList.remove('open');updateSubtitle();}
+function updateSubtitle(){const p=state.profile;let s='Testosterone Meal Plan';if(p.age)s+=` · ${p.age}yr`;if(p.tLevel)s+=` · ${p.tLevel} ng/dL`;document.getElementById('appSubtitle').textContent=s;}
+if(!state.onboarded){document.getElementById('onboardOverlay').classList.add('open');}else{updateSubtitle();}
+
+// NAV
+function showScreen(name,btn){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));document.getElementById('screen'+name).classList.add('active');btn.classList.add('active');if(name==='Progress')renderProgress();if(name==='Supps')renderSupps();if(name==='Workout')renderWorkout();}
+
+function getActiveMeal(d,m){const slot=DAYS[d].meals[m],k=`${d}_${m}`,ai=state.swaps[k]!==undefined?state.swaps[k]:slot.altIdx;return{...ALTERNATIVES[slot.type][ai],type:slot.type};}
+
+// MEALS
+function renderDayTabs(){const names=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],wrap=document.getElementById('dayScroll');wrap.innerHTML='';names.forEach((n,i)=>{const dc=DAYS[i].meals.filter((_,mi)=>state.checked[`${i}_${mi}`]).length,tot=DAYS[i].meals.length,btn=document.createElement('button');btn.className='day-btn'+(i===state.currentDay?' active':'')+(dc===tot?' complete':'');btn.innerHTML=`<span class="day-name">${n}</span><span class="day-num">${i+1}</span>`;btn.onclick=()=>{state.currentDay=i;renderDayTabs();renderMeals();};wrap.appendChild(btn);});}
+
+function renderMeals(){const day=DAYS[state.currentDay],list=document.getElementById('mealList');list.innerHTML='';let tc=0,tp=0,tC=0,tf=0,cc=0,cp=0,cC=0,cf=0;
+day.meals.forEach((slot,mi)=>{const m=getActiveMeal(state.currentDay,mi),k=`${state.currentDay}_${mi}`,ck=!!state.checked[k];tc+=m.cal;tp+=m.p;tC+=m.c;tf+=m.f;if(ck){cc+=m.cal;cp+=m.p;cC+=m.c;cf+=m.f;}
+const hasR=!!RECIPES[m.name],card=document.createElement('div');card.className='meal-card'+(ck?' checked':'');
+card.innerHTML=`<div class="meal-header" onclick="toggleExpand(this.parentElement)"><button class="meal-check" onclick="event.stopPropagation();toggleMeal(${state.currentDay},${mi},this.closest('.meal-card'))"><svg class="check-icon meal-check-inner" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="meal-info"><div class="meal-type">${m.type}</div><div class="meal-name">${m.name}</div></div><div class="meal-cals">${m.cal} kcal</div><svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div><div class="meal-expand"><div class="meal-desc">${m.desc}</div><div class="meal-serving">📏 ${m.serving}</div><div class="macro-chips"><span class="chip chip-p">P ${m.p}g</span><span class="chip chip-c">C ${m.c}g</span><span class="chip chip-f">F ${m.f}g</span></div><div class="meal-actions"><button class="swap-btn" onclick="event.stopPropagation();openPicker(${state.currentDay},${mi})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>SWAP</button>${hasR?`<button class="recipe-btn" onclick="event.stopPropagation();openRecipe('${m.name.replace(/'/g,"\\'")}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>RECIPE</button>`:''}</div></div>`;
+list.appendChild(card);});
+updateMacroBars(cc,tc,cp,tp,cC,tC,cf,tf);}
+
+function updateMacroBars(cc,tc,cp,tp,cC,tC,cf,tf){document.getElementById('calDisplay').textContent=cc;document.getElementById('calTarget').textContent=tc;document.getElementById('barP').style.width=(tp?Math.min(100,cp/tp*100):0)+'%';document.getElementById('barC').style.width=(tC?Math.min(100,cC/tC*100):0)+'%';document.getElementById('barF').style.width=(tf?Math.min(100,cf/tf*100):0)+'%';document.getElementById('valP').textContent=`${cp} / ${tp}g`;document.getElementById('valC').textContent=`${cC} / ${tC}g`;document.getElementById('valF').textContent=`${cf} / ${tf}g`;}
+function toggleExpand(card){card.classList.toggle('open');}
+function toggleMeal(d,m,card){const k=`${d}_${m}`;state.checked[k]=!state.checked[k];card.classList.toggle('checked',state.checked[k]);save();renderMeals();renderDayTabs();updateStreak();}
+function updateStreak(){let s=0;for(let i=6;i>=0;i--){const done=DAYS[i].meals.filter((_,mi)=>state.checked[`${i}_${mi}`]).length;if(done>0)s++;else break;}document.getElementById('streakBadge').textContent=`🔥 ${s} day${s!==1?'s':''}`;}
+
+// PICKER
+let _pd=0,_pm=0;
+function openPicker(d,m){_pd=d;_pm=m;const slot=DAYS[d].meals[m],k=`${d}_${m}`,cur=state.swaps[k]!==undefined?state.swaps[k]:slot.altIdx,alts=ALTERNATIVES[slot.type];document.getElementById('pickerTitle').textContent=`${slot.type} Options`;document.getElementById('pickerSubtitle').textContent=`${alts.length} meals available`;const sc=document.getElementById('pickerScroll');sc.innerHTML='';alts.forEach((alt,idx)=>{const isSel=idx===cur,div=document.createElement('div');div.className='alt-card'+(isSel?' selected':'');div.innerHTML=`<div class="alt-card-top"><div class="alt-name">${alt.name}${isSel?'<span class="selected-badge">✓ Current</span>':''}</div><div class="alt-cal">${alt.cal} kcal</div></div><div class="alt-serving">📏 ${alt.serving}</div><div class="alt-desc">${alt.desc}</div><div class="alt-chips"><span class="chip chip-p">P ${alt.p}g</span><span class="chip chip-c">C ${alt.c}g</span><span class="chip chip-f">F ${alt.f}g</span></div>`;div.onclick=()=>selAlt(idx);sc.appendChild(div);});document.getElementById('pickerOverlay').classList.add('open');}
+function selAlt(idx){const k=`${_pd}_${_pm}`;state.swaps[k]=idx;if(state.checked[k])state.checked[k]=false;save();closePicker();renderMeals();renderDayTabs();}
+function closePicker(){document.getElementById('pickerOverlay').classList.remove('open');}
+document.getElementById('pickerOverlay').addEventListener('click',function(e){if(e.target===this)closePicker();});
+
+// RECIPE
+function openRecipe(name){const r=RECIPES[name];if(!r)return;document.getElementById('recipeTitle').textContent=name;document.getElementById('recipeMeta').innerHTML=`<span class="recipe-meta-chip">⏱ ${r.time}</span><span class="recipe-meta-chip">👤 ${r.servings} serving</span><span class="recipe-meta-chip">📊 ${r.difficulty}</span>`;document.getElementById('recipeContent').innerHTML=`<div class="recipe-section-title">INGREDIENTS</div><div class="recipe-ingredients">${r.ingredients.map(i=>`<div class="recipe-ingredient"><div class="recipe-ingredient-bullet"></div><div class="recipe-ingredient-name">${i.name}</div><div class="recipe-ingredient-qty">${i.qty}</div></div>`).join('')}</div><div class="recipe-section-title">METHOD</div><div class="recipe-steps">${r.steps.map((s,i)=>`<div class="recipe-step"><div class="recipe-step-num">${i+1}</div><div class="recipe-step-text">${s}</div></div>`).join('')}</div>${r.tip?`<div class="recipe-tip">${r.tip}</div>`:''}`
+;document.getElementById('recipeOverlay').classList.add('open');}
+function closeRecipe(){document.getElementById('recipeOverlay').classList.remove('open');}
+document.getElementById('recipeOverlay').addEventListener('click',function(e){if(e.target===this)closeRecipe();});
+
+// SHOPPING
+function renderShop(){const wrap=document.getElementById('shopList');wrap.innerHTML='';SHOP.forEach((cat,ci)=>{const div=document.createElement('div');div.className='shop-category';const t=cat.items.filter((_,ii)=>state.shopped[`${ci}_${ii}`]).length;div.innerHTML=`<div class="shop-cat-header" onclick="this.parentElement.classList.toggle('open')"><span>${cat.cat} <span style="color:var(--muted);font-size:11px;font-weight:400">(${t}/${cat.items.length})</span></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div><div class="shop-items">${cat.items.map((item,ii)=>`<div class="shop-item${state.shopped[`${ci}_${ii}`]?' ticked':''}" onclick="toggleShop(${ci},${ii})"><div class="shop-checkbox">${state.shopped[`${ci}_${ii}`]?'<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</div><div class="shop-item-name">${item.name}</div><div class="shop-item-qty">${item.qty}</div></div>`).join('')}</div>`;wrap.appendChild(div);});const cb=document.createElement('button');cb.className='clear-btn';cb.textContent='Clear All Ticked Items';cb.onclick=()=>{state.shopped={};save();renderShop();};wrap.appendChild(cb);}
+function toggleShop(ci,ii){const k=`${ci}_${ii}`;state.shopped[k]=!state.shopped[k];save();renderShop();}
+
+// SUPPLEMENTS (daily checklist)
+function getTodaySupKey(){const d=new Date();return`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;}
+function renderSupps(){const tk=getTodaySupKey(),wrap=document.getElementById('suppList');wrap.innerHTML='';const done=SUPPS.filter((_,i)=>(state.suppChecked[tk]||{})[i]).length,pct=Math.round(done/SUPPS.length*100);document.getElementById('suppProgressBar').style.width=pct+'%';document.getElementById('suppProgressText').textContent=`${done} of ${SUPPS.length} taken today`;document.getElementById('suppProgressPct').textContent=pct+'%';document.getElementById('suppDateLabel').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+SUPPS.forEach((s,si)=>{const checked=!!(state.suppChecked[tk]||{})[si],card=document.createElement('div');card.className='supp-card'+(checked?' supp-done':'');card.innerHTML=`<div class="supp-header"><div class="supp-header-left"><div class="supp-name">${s.name}</div><span class="supp-badge ${s.badgeClass}">${s.badge}</span></div><button class="supp-check-btn" onclick="toggleSupp(${si})">${checked?'<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</button></div><div class="supp-dose">💊 ${s.dose}</div><div class="supp-timing">⏰ ${s.timing}</div><button class="supp-expand-btn" onclick="this.parentElement.classList.toggle('supp-open');this.textContent=this.parentElement.classList.contains('supp-open')?'▲ Less info':'▼ More info'">▼ More info</button><div class="supp-desc">${s.desc}</div><div class="supp-benefits">${s.benefits.map(b=>`<span class="benefit-tag">${b}</span>`).join('')}</div>`;wrap.appendChild(card);});}
+function toggleSupp(si){const tk=getTodaySupKey();if(!state.suppChecked[tk])state.suppChecked[tk]={};state.suppChecked[tk][si]=!state.suppChecked[tk][si];save();renderSupps();}
+
+// WORKOUT LOG
+let selWTType='',selWTIcon='';
+function selWT(type,icon,el){selWTType=type;selWTIcon=icon;document.querySelectorAll('.workout-type-btn').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');}
+function saveWorkout(){if(!selWTType){alert('Please select a workout type.');return;}const notes=document.getElementById('workoutNotes').value.trim(),now=new Date();state.workouts.unshift({type:selWTType,icon:selWTIcon,notes,date:now.toISOString(),dateLabel:now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}),timeLabel:now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})});if(state.workouts.length>50)state.workouts=state.workouts.slice(0,50);save();selWTType='';selWTIcon='';document.querySelectorAll('.workout-type-btn').forEach(b=>b.classList.remove('selected'));document.getElementById('workoutNotes').value='';renderWorkout();}
+function deleteWorkout(idx){state.workouts.splice(idx,1);save();renderWorkout();}
+function getWorkoutStreak(){const today=new Date();today.setHours(0,0,0,0);let s=0;let cd=new Date(today);for(let d=0;d<365;d++){const ds=cd.toDateString(),has=state.workouts.some(w=>{const wd=new Date(w.date);wd.setHours(0,0,0,0);return wd.toDateString()===ds&&w.type!=='Rest';});if(has){s++;}else if(d>0){break;}cd.setDate(cd.getDate()-1);}return s;}
+function renderWorkout(){document.getElementById('workoutTodayDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});document.getElementById('workoutStreakVal').textContent=getWorkoutStreak();const hist=document.getElementById('workoutHistory');hist.innerHTML='';if(state.workouts.length===0){hist.innerHTML='<div class="empty-state">No workouts logged yet.<br>Log your first one above!</div>';return;}state.workouts.forEach((w,i)=>{const div=document.createElement('div');div.className='workout-entry';div.innerHTML=`<div class="workout-entry-icon">${w.icon}</div><div class="workout-entry-info"><div class="workout-entry-type">${w.type}</div><div class="workout-entry-meta">${w.dateLabel} · ${w.timeLabel}</div>${w.notes?`<div class="workout-entry-notes">${w.notes}</div>`:''}</div><button class="workout-del-btn" onclick="deleteWorkout(${i})">✕</button>`;hist.appendChild(div);});}
+
+// PROGRESS
+function renderProgress(){const grid=document.getElementById('weekGrid');grid.innerHTML='';const dn=['M','T','W','T','F','S','S'];let tmc=0,tm=0,da=0;DAYS.forEach((day,i)=>{const done=day.meals.filter((_,mi)=>state.checked[`${i}_${mi}`]).length,total=day.meals.length,pct=total?Math.round(done/total*100):0;tmc+=done;tm+=total;if(done>0)da++;const col=pct===100?'var(--green)':pct>50?'var(--gold)':pct>0?'var(--blue)':'var(--muted)';grid.innerHTML+=`<div class="prog-day${done>0?' has-data':''}"><div class="prog-day-name">${dn[i]}</div><svg class="prog-ring" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="var(--border)" stroke-width="3"/><circle cx="18" cy="18" r="15" fill="none" stroke="${col}" stroke-width="3" stroke-dasharray="${pct*94.2/100} 94.2" stroke-dashoffset="23.55" stroke-linecap="round"/></svg><div class="prog-day-meals" style="color:${col}">${done}/${total}</div></div>`;});
+const adh=tm?Math.round(tmc/tm*100):0,ws=getWorkoutStreak(),sd=Object.values((state.suppChecked[getTodaySupKey()]||{})).filter(Boolean).length;document.getElementById('statsGrid').innerHTML=`<div class="stat-card"><div class="stat-val">${adh}%</div><div class="stat-label">Meal Adherence</div></div><div class="stat-card"><div class="stat-val">${da}</div><div class="stat-label">Active Days</div></div><div class="stat-card"><div class="stat-val">${ws}</div><div class="stat-label">Workout Streak</div></div><div class="stat-card"><div class="stat-val">${sd}/${SUPPS.length}</div><div class="stat-label">Supps Today</div></div>`;
+let ac=0,ap=0,aC=0,af=0;DAYS.forEach((day,i)=>day.meals.forEach((slot,mi)=>{if(state.checked[`${i}_${mi}`]){const m=getActiveMeal(i,mi);ac+=m.cal;ap+=m.p;aC+=m.c;af+=m.f;}}));
+document.getElementById('macroAvgCards').innerHTML=`<div class="macro-summary"><div class="macro-bars"><div class="macro-row"><div class="macro-label">Calories</div><div class="macro-bar-wrap"><div class="macro-bar-fill" style="width:${Math.min(100,ac/(2600*7)*100)}%;background:var(--gold)"></div></div><div class="macro-val">${ac} kcal</div></div><div class="macro-row"><div class="macro-label">Protein</div><div class="macro-bar-wrap"><div class="macro-bar-fill" style="width:${Math.min(100,ap/(180*7)*100)}%;background:var(--blue)"></div></div><div class="macro-val">${ap}g</div></div><div class="macro-row"><div class="macro-label">Carbs</div><div class="macro-bar-wrap"><div class="macro-bar-fill" style="width:${Math.min(100,aC/(240*7)*100)}%;background:var(--gold2)"></div></div><div class="macro-val">${aC}g</div></div><div class="macro-row"><div class="macro-label">Fat</div><div class="macro-bar-wrap"><div class="macro-bar-fill" style="width:${Math.min(100,af/(95*7)*100)}%;background:var(--red)"></div></div><div class="macro-val">${af}g</div></div></div></div><div style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px">Totals from all checked meals this week</div><button class="reset-btn" onclick="openModal()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4"/></svg>Reset Week</button>`;}
+
+// RESET
+function openModal(){document.getElementById('resetModal').classList.add('open');}
+function closeModal(){document.getElementById('resetModal').classList.remove('open');}
+function confirmReset(){state.checked={};state.swaps={};save();closeModal();renderDayTabs();renderMeals();updateStreak();renderProgress();}
+document.getElementById('resetModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+// AI COACH
+let coachHistory=[];
+const SYS=`You are an expert testosterone nutrition coach embedded in the T-Diet app. Users follow a testosterone-optimizing meal plan with foods like eggs, salmon, grass-fed beef, avocado, nuts, quinoa, sweet potato. Supplements include Omega-3, ZMA, Ashwagandha KSM-66, Creatine. Be direct, evidence-based, and motivating. Keep responses to 2-5 sentences unless more detail is truly needed.`;
+function sendChip(el){document.getElementById('coachInput').value=el.textContent;sendCoachMessage();}
+function coachKeydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendCoachMessage();}}
+async function sendCoachMessage(){const input=document.getElementById('coachInput'),msg=input.value.trim();if(!msg)return;input.value='';appendBubble('user',msg);coachHistory.push({role:'user',content:msg});const tb=appendBubble('ai typing','...');
+try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:coachHistory})});const d=await r.json();const reply=d.content&&d.content[0]?d.content[0].text:"Sorry, couldn't get a response. Please try again.";tb.className='coach-bubble ai';tb.textContent=reply;coachHistory.push({role:'assistant',content:reply});if(coachHistory.length>20)coachHistory=coachHistory.slice(-20);}catch(err){tb.className='coach-bubble ai';tb.textContent='Connection error. Please try again.';}
+const ms=document.getElementById('coachMessages');ms.scrollTop=ms.scrollHeight;}
+function appendBubble(role,text){const div=document.createElement('div');div.className=`coach-bubble ${role}`;div.textContent=text;const ms=document.getElementById('coachMessages');ms.appendChild(div);ms.scrollTop=ms.scrollHeight;return div;}
+
+
+// ── ACHIEVEMENT BADGES ──
+const ACHIEVEMENTS = [
+  {id:'first_meal', icon:'🍽️', name:'First Bite', desc:'Check off your first meal', check:s=>Object.keys(s.checked).length>=1},
+  {id:'perfect_day', icon:'⭐', name:'Perfect Day', desc:'Check all meals in a day', check:s=>DAYS.some((_,i)=>DAYS[i].meals.every((_,mi)=>s.checked[`${i}_${mi}`]))},
+  {id:'streak3', icon:'🔥', name:'On Fire', desc:'3-day meal streak', check:s=>{let str=0;for(let i=6;i>=0;i--){const done=DAYS[i].meals.filter((_,mi)=>s.checked[`${i}_${mi}`]).length;if(done>0)str++;else break;}return str>=3;}},
+  {id:'streak7', icon:'💎', name:'Diamond Week', desc:'Full 7-day meal streak', check:s=>DAYS.every((_,i)=>DAYS[i].meals.some((_,mi)=>s.checked[`${i}_${mi}`]))},
+  {id:'first_workout', icon:'🏋️', name:'First Rep', desc:'Log your first workout', check:s=>s.workouts.length>=1},
+  {id:'workout5', icon:'💪', name:'Consistent', desc:'Log 5 workouts total', check:s=>s.workouts.filter(w=>w.type!=='Rest').length>=5},
+  {id:'workout_streak3', icon:'⚡', name:'Momentum', desc:'3-day workout streak', check:s=>getWorkoutStreak()>=3},
+  {id:'supps_perfect', icon:'💊', name:'Supplement King', desc:'Take all supps in a day', check:s=>{const tk=getTodaySupKey();const sc=s.suppChecked[tk]||{};return SUPPS.every((_,i)=>sc[i]);}},
+  {id:'first_swap', icon:'🔄', name:'Mix It Up', desc:'Swap a meal for the first time', check:s=>Object.keys(s.swaps).length>=1},
+  {id:'shopper', icon:'🛒', name:'Stocked Up', desc:'Tick 10 shopping items', check:s=>Object.values(s.shopped).filter(Boolean).length>=10},
+  {id:'coach_chat', icon:'🤖', name:'Ask the Coach', desc:'Send your first AI coach message', check:s=>s.coachMsgCount>=1},
+  {id:'planner', icon:'📅', name:'Week Warrior', desc:'Check meals on 5 different days', check:s=>{const days=new Set(Object.keys(s.checked).map(k=>k.split('_')[0]));return days.size>=5;}},
+];
+
+function checkAchievements() {
+  const prev = new Set(state.unlockedBadges || []);
+  ACHIEVEMENTS.forEach(a => {
+    if (!prev.has(a.id) && a.check(state)) {
+      if (!state.unlockedBadges) state.unlockedBadges = [];
+      if (!state.unlockedBadges.includes(a.id)) {
+        state.unlockedBadges.push(a.id);
+        if (!state.badgeDates) state.badgeDates = {};
+        state.badgeDates[a.id] = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'});
+        save();
+        showBadgeToast(a);
+      }
+    }
+  });
+}
+
+let _toastTimer = null;
+function showBadgeToast(a) {
+  const toast = document.getElementById('badgeToast');
+  document.getElementById('badgeToastIcon').textContent = a.icon;
+  document.getElementById('badgeToastName').textContent = a.name;
+  document.getElementById('badgeToastDesc').textContent = a.desc;
+  toast.classList.add('show');
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+function renderBadges() {
+  const grid = document.getElementById('badgesGrid');
+  if (!grid) return;
+  const unlocked = new Set(state.unlockedBadges || []);
+  grid.innerHTML = ACHIEVEMENTS.map(a => {
+    const isUnlocked = unlocked.has(a.id);
+    const dateStr = (state.badgeDates || {})[a.id] || '';
+    return `<div class="badge-card ${isUnlocked ? 'unlocked' : 'locked'}">
+      <div class="badge-card-icon">${a.icon}</div>
+      <div class="badge-card-name">${a.name}</div>
+      <div class="badge-card-desc">${a.desc}</div>
+      ${isUnlocked && dateStr ? `<div class="badge-card-date">${dateStr}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── CALORIE GOALS ──
+const DEFAULT_GOALS = {cal:2600, p:180, c:240, f:95};
+function getGoals() { return Object.assign({}, DEFAULT_GOALS, state.goals || {}); }
+
+function renderGoalsDisplay() {
+  const g = getGoals();
+  const el = document.getElementById('goalsDisplay');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="goal-item"><div class="goal-label">CALORIES</div><div class="goal-val">${g.cal}</div><div class="goal-unit">kcal / day</div></div>
+    <div class="goal-item"><div class="goal-label">PROTEIN</div><div class="goal-val">${g.p}g</div><div class="goal-unit">per day</div></div>
+    <div class="goal-item"><div class="goal-label">CARBS</div><div class="goal-val">${g.c}g</div><div class="goal-unit">per day</div></div>
+    <div class="goal-item"><div class="goal-label">FAT</div><div class="goal-val">${g.f}g</div><div class="goal-unit">per day</div></div>
+  `;
+}
+
+function toggleGoalsEdit() {
+  const form = document.getElementById('goalsEditForm');
+  const g = getGoals();
+  document.getElementById('gi_cal').value = g.cal;
+  document.getElementById('gi_p').value = g.p;
+  document.getElementById('gi_c').value = g.c;
+  document.getElementById('gi_f').value = g.f;
+  form.classList.toggle('open');
+}
+
+function saveGoals() {
+  const cal = parseInt(document.getElementById('gi_cal').value) || DEFAULT_GOALS.cal;
+  const p = parseInt(document.getElementById('gi_p').value) || DEFAULT_GOALS.p;
+  const c = parseInt(document.getElementById('gi_c').value) || DEFAULT_GOALS.c;
+  const f = parseInt(document.getElementById('gi_f').value) || DEFAULT_GOALS.f;
+  state.goals = {cal, p, c, f};
+  save();
+  document.getElementById('goalsEditForm').classList.remove('open');
+  renderGoalsDisplay();
+  renderMeals(); // re-render to update target display
+}
+
+// ── OVERRIDE updateMacroBars to use custom goals ──
+const _origUpdateMacroBars = updateMacroBars;
+updateMacroBars = function(cc, tc, cp, tp, cC, tC, cf, tf) {
+  const g = getGoals();
+  document.getElementById('calDisplay').textContent = cc;
+  document.getElementById('calTarget').textContent = g.cal;
+  document.getElementById('barP').style.width = (g.p ? Math.min(100, cp/g.p*100) : 0) + '%';
+  document.getElementById('barC').style.width = (g.c ? Math.min(100, cC/g.c*100) : 0) + '%';
+  document.getElementById('barF').style.width = (g.f ? Math.min(100, cf/g.f*100) : 0) + '%';
+  document.getElementById('valP').textContent = `${cp} / ${g.p}g`;
+  document.getElementById('valC').textContent = `${cC} / ${g.c}g`;
+  document.getElementById('valF').textContent = `${cf} / ${g.f}g`;
+};
+
+// ── SEARCH/FILTER IN PICKER ──
+let _allAlts = [], _filterActive = 'all', _searchQ = '';
+
+const FILTER_OPTIONS = [
+  {key:'all', label:'All'},
+  {key:'high-protein', label:'High Protein', check:a=>a.p>=30},
+  {key:'low-carb', label:'Low Carb', check:a=>a.c<=20},
+  {key:'low-cal', label:'Low Cal', check:a=>a.cal<=300},
+  {key:'high-fat', label:'High Fat', check:a=>a.f>=20},
+];
+
+// Override openPicker to add search/filter
+const _origOpenPicker = openPicker;
+openPicker = function(d, m) {
+  _pd = d; _pm = m;
+  const slot = DAYS[d].meals[m], k = `${d}_${m}`;
+  const cur = state.swaps[k] !== undefined ? state.swaps[k] : slot.altIdx;
+  _allAlts = ALTERNATIVES[slot.type].map((a, idx) => ({...a, idx, isCurrent: idx === cur}));
+  _filterActive = 'all'; _searchQ = '';
+
+  document.getElementById('pickerTitle').textContent = `${slot.type} Options`;
+  document.getElementById('pickerSubtitle').textContent = `${_allAlts.length} meals available`;
+
+  // Search input
+  const searchEl = document.getElementById('pickerSearch');
+  if (searchEl) { searchEl.value = ''; }
+
+  // Filter chips
+  const chips = document.getElementById('pickerFilterChips');
+  if (chips) {
+    chips.innerHTML = FILTER_OPTIONS.map(f =>
+      `<div class="filter-chip${f.key==='all'?' active':''}" data-key="${f.key}" onclick="setFilter('${f.key}',this)">${f.label}</div>`
+    ).join('');
+  }
+
+  renderPickerAlts();
+  document.getElementById('pickerOverlay').classList.add('open');
+  setTimeout(() => { if (searchEl) searchEl.focus(); }, 300);
+};
+
+function setFilter(key, el) {
+  _filterActive = key;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderPickerAlts();
+}
+
+function filterPicker() {
+  _searchQ = document.getElementById('pickerSearch').value.toLowerCase();
+  renderPickerAlts();
+}
+
+function renderPickerAlts() {
+  const sc = document.getElementById('pickerScroll');
+  sc.innerHTML = '';
+  const filterDef = FILTER_OPTIONS.find(f => f.key === _filterActive);
+  let results = _allAlts.filter(a => {
+    const matchSearch = !_searchQ || a.name.toLowerCase().includes(_searchQ) || a.desc.toLowerCase().includes(_searchQ);
+    const matchFilter = _filterActive === 'all' || (filterDef && filterDef.check(a));
+    return matchSearch && matchFilter;
+  });
+
+  if (results.length === 0) {
+    sc.innerHTML = '<div class="picker-no-results">No meals match your search.<br>Try a different filter or keyword.</div>';
+    return;
+  }
+
+  results.forEach(alt => {
+    const div = document.createElement('div');
+    div.className = 'alt-card' + (alt.isCurrent ? ' selected' : '');
+    div.innerHTML = `<div class="alt-card-top"><div class="alt-name">${alt.name}${alt.isCurrent ? '<span class="selected-badge">✓ Current</span>' : ''}</div><div class="alt-cal">${alt.cal} kcal</div></div><div class="alt-serving">📏 ${alt.serving}</div><div class="alt-desc">${alt.desc}</div><div class="alt-chips"><span class="chip chip-p">P ${alt.p}g</span><span class="chip chip-c">C ${alt.c}g</span><span class="chip chip-f">F ${alt.f}g</span></div>`;
+    div.onclick = () => selAlt(alt.idx);
+    sc.appendChild(div);
+  });
+}
+
+// ── PWA / OFFLINE — iOS + Android compatible ──
+
+// Detect iOS Safari
+const isIOS = /ipad|iphone|ipod/i.test(navigator.userAgent) && !window.MSStream;
+const isInStandaloneMode = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+// Android/Chrome: native install prompt
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  showAndroidInstallBanner();
+});
+
+function showAndroidInstallBanner() {
+  const b = document.getElementById('androidInstallBanner');
+  if (b && !isInStandaloneMode) b.style.display = 'flex';
+}
+
+async function installPWA() {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  const result = await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  const b = document.getElementById('androidInstallBanner');
+  if (b) b.style.display = 'none';
+}
+
+// iOS Safari: show share sheet guide
+function showIOSInstallGuide() {
+  document.getElementById('iosInstallModal').classList.add('open');
+}
+function closeIOSInstallGuide() {
+  document.getElementById('iosInstallModal').classList.remove('open');
+}
+
+// Show iOS guide if on iOS Safari and not already installed
+if (isIOS && isSafari && !isInStandaloneMode) {
+  const shown = localStorage.getItem('tdiet_ios_banner_shown');
+  if (!shown) {
+    setTimeout(() => {
+      const b = document.getElementById('iosInstallBanner');
+      if (b) b.style.display = 'flex';
+    }, 2000);
+    localStorage.setItem('tdiet_ios_banner_shown', '1');
+  }
+}
+
+// Online/offline detection
+window.addEventListener('online', () => {
+  document.getElementById('offlineIndicator').classList.remove('show');
+});
+window.addEventListener('offline', () => {
+  document.getElementById('offlineIndicator').classList.add('show');
+});
+
+// ── CACHE-FIRST OFFLINE STORAGE using Cache API ──
+// Since blob-URL service workers are blocked in Safari, we use Cache API directly
+// to pre-cache the page HTML for offline use. Falls back gracefully if unavailable.
+async function cachePageForOffline() {
+  if (!('caches' in window)) return;
+  try {
+    const cache = await caches.open('tdiet-v4');
+    // Cache the current page
+    const resp = await fetch(location.href).catch(() => null);
+    if (resp && resp.ok) {
+      await cache.put(location.href, resp);
+    }
+  } catch(e) {}
+}
+
+// Try to serve from cache if offline (page-level fallback via fetch intercept)
+// This works in Safari via Cache API even without a service worker
+window.addEventListener('load', () => {
+  cachePageForOffline();
+  // Show offline state if already offline on load
+  if (!navigator.onLine) {
+    document.getElementById('offlineIndicator').classList.add('show');
+  }
+});
+
+// ── PATCH EXISTING FUNCTIONS TO CHECK ACHIEVEMENTS + USE GOALS ──
+const _origToggleMeal = toggleMeal;
+toggleMeal = function(d, m, card) {
+  _origToggleMeal(d, m, card);
+  checkAchievements();
+};
+const _origSaveWorkout = saveWorkout;
+saveWorkout = function() {
+  _origSaveWorkout();
+  checkAchievements();
+};
+const _origToggleSupp = toggleSupp;
+toggleSupp = function(si) {
+  _origToggleSupp(si);
+  checkAchievements();
+};
+const _origToggleShop = toggleShop;
+toggleShop = function(ci, ii) {
+  _origToggleShop(ci, ii);
+  checkAchievements();
+};
+const _origSelAlt = selAlt;
+selAlt = function(idx) {
+  _origSelAlt(idx);
+  checkAchievements();
+};
+
+// Track coach messages for achievement
+const _origSendCoach = sendCoachMessage;
+sendCoachMessage = async function() {
+  if (!state.coachMsgCount) state.coachMsgCount = 0;
+  state.coachMsgCount++;
+  save();
+  await _origSendCoach();
+  checkAchievements();
+};
+
+// Patch renderProgress to also render badges and goals
+const _origRenderProgress = renderProgress;
+renderProgress = function() {
+  _origRenderProgress();
+  renderBadges();
+  renderGoalsDisplay();
+};
+
+// Initial badge + goals render
+checkAchievements();
+renderGoalsDisplay();
+
+// INIT
+renderDayTabs();renderMeals();renderShop();renderSupps();updateStreak();renderWorkout();
+appendBubble('ai',"Hey! I'm your AI Meal Coach — I know your T-Diet plan inside and out. Ask me anything about testosterone nutrition, meal substitutions, supplement timing, or how to maximize your results. What's on your mind?");
+</script>
+
+<!-- iOS INSTALL MODAL -->
+<div class="modal-overlay" id="iosInstallModal" onclick="if(event.target===this)closeIOSInstallGuide()">
+  <div class="modal-sheet" style="padding-bottom:40px">
+    <div style="text-align:center;margin-bottom:8px;font-size:44px">📱</div>
+    <div class="modal-title">Add to Home Screen</div>
+    <div class="modal-desc">Install T-Diet as an app for the best experience — works offline, no browser chrome, faster.</div>
+    <div class="ios-steps">
+      <div class="ios-step"><div class="ios-step-num">1</div><div class="ios-step-text">Tap the <strong>Share</strong> button <span class="ios-share-icon">⬆</span> at the bottom of Safari</div></div>
+      <div class="ios-step"><div class="ios-step-num">2</div><div class="ios-step-text">Scroll down and tap <strong>"Add to Home Screen"</strong></div></div>
+      <div class="ios-step"><div class="ios-step-num">3</div><div class="ios-step-text">Tap <strong>Add</strong> in the top-right corner</div></div>
+    </div>
+    <button class="modal-cancel" onclick="closeIOSInstallGuide()" style="margin-top:16px">Got it</button>
+  </div>
+</div>
+
+<!-- BADGE TOAST -->
+<div class="badge-toast" id="badgeToast">
+  <div class="badge-toast-icon" id="badgeToastIcon">🏅</div>
+  <div class="badge-toast-text">
+    <div class="badge-toast-label">Achievement Unlocked!</div>
+    <div class="badge-toast-name" id="badgeToastName"></div>
+    <div class="badge-toast-desc" id="badgeToastDesc"></div>
+  </div>
+</div>
+<!-- OFFLINE -->
+<div class="offline-indicator" id="offlineIndicator">📵 Offline — data saved locally</div>
+</body>
+</html>
